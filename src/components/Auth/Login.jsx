@@ -1,3 +1,4 @@
+// src/components/Auth/Login.jsx
 import React, { useState } from 'react';
 import { auth, signInWithEmailAndPassword } from '../../firebase';
 import { useNavigate } from 'react-router-dom'; // Para redirigir después del login
@@ -17,7 +18,7 @@ const Login = () => {
     try {
       // Llamada a Firebase para iniciar sesión
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/home'); // Redirigir a la página principal
+      navigate('/home'); // Redirigir a la página principal (ajusta la ruta)
     } catch (error) {
       setError("Error de autenticación. Verifica tu correo y contraseña.");
     }
