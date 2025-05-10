@@ -1,8 +1,29 @@
 // src/components/Auth/Login.jsx
-import React from 'react';
+import React, { useState } from 'react';
+import { auth, signInWithEmailAndPassword } from '../../firebase';
+import { useNavigate } from 'react-router-dom'; // Para redirigir después del login
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const Login = () => {
+  // Estado local para los campos de entrada
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Para navegar después del login exitoso
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null); // Limpiar el error previo
+
+    try {
+      // Llamada a Firebase para iniciar sesión
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/home'); // Redirigir a la página principal (ajusta la ruta)
+    } catch (error) {
+      setError("Error de autenticación. Verifica tu correo y contraseña.");
+    }
+  };
+
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
@@ -15,14 +36,24 @@ const Login = () => {
           />
           <h3 className="mt-2">Iniciar Sesión</h3>
         </div>
-        <form>
+        {error && <div className="alert alert-danger">{error}</div>} {/* Mostrar errores */}
+
+        <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Correo electrónico</label>
             <div className="input-group">
               <span className="input-group-text">
                 <i className="bi bi-envelope-fill"></i>
               </span>
-              <input type="email" className="form-control" id="email" placeholder="tucorreo@ejemplo.com" />
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                placeholder="tucorreo@ejemplo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
           </div>
           <div className="mb-3">
@@ -31,7 +62,15 @@ const Login = () => {
               <span className="input-group-text">
                 <i className="bi bi-lock-fill"></i>
               </span>
-              <input type="password" className="form-control" id="password" placeholder="••••••••" />
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </div>
           </div>
           <div className="d-grid">
