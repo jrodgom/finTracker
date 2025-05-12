@@ -244,6 +244,7 @@ body.dark input:-webkit-autofill {
   margin-top: 1rem;
   font-weight: 500;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .google-btn:hover {
@@ -253,4 +254,75 @@ body.dark input:-webkit-autofill {
 
 .google-icon {
   width: 20px;
+}
+
+.register-link-text {
+  cursor: pointer;
+}
+
+.register-link-text:hover {
+  text-decoration: underline;
+  color: var(--primary);
+}
+
+.separator {
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #777;
+  font-size: 1rem;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+body.dark .register-link {
+  color: #ccc;
+}
+
+.register-link a {
+  color: var(--primary);
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+  color: var(--secondary);
+}
+
+/* Separador con una línea y la 'O' en el medio */
+.separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.5rem 0;
+  text-align: center;
+  color: #444; /* Cambié el color del texto de la 'O' */
+}
+
+.separator hr {
+  border: 0;
+  border-top: 2px solid #444; /* Líneas más oscuras */
+  flex-grow: 1;
+  margin: 0 1rem;
+}
+
+.separator-o {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #444; /* Color más oscuro para la 'O' */
+  padding: 0 0.5rem; /* Espaciado entre la O y las líneas */
+}
+
+.separator hr:first-of-type {
+  margin-left: 0;
+}
+
+.separator hr:last-of-type {
+  margin-right: 0;
 }

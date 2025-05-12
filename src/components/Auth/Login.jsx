@@ -83,6 +83,16 @@ const Login = () => {
 
           <button type="submit" className="btn-primary w-100">Entrar</button>
 
+          <div className="register-link">
+            ¿No tienes cuenta?
+            <a className="register-link-text" onClick={() => navigate('/register')}>Regístrate aquí</a>
+          </div>
+          <div className="separator">
+            <hr />
+            <span className="separator-o">O</span>
+            <hr />
+          </div>
+
           <button type="button" className="google-btn" onClick={handleGoogleSignIn}>
             <img
               src="https://developers.google.com/identity/images/g-logo.png"
@@ -91,11 +101,6 @@ const Login = () => {
             />
             Continuar con Google
           </button>
-
-          <div className="register-link">
-            ¿No tienes cuenta?
-            <a onClick={() => navigate('/register')}>Regístrate aquí</a>
-          </div>
         </form>
       </div>
     </div>
