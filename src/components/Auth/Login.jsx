@@ -37,11 +37,7 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
-            alt="User avatar"
-            className="login-avatar"
-          />
+          
           <h2>Iniciar Sesión</h2>
         </div>
 
