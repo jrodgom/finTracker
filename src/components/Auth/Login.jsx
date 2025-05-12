@@ -1,80 +1,100 @@
 // src/components/Auth/Login.jsx
 import React, { useState } from 'react';
-import { auth, signInWithEmailAndPassword } from '../../firebase';
-import { useNavigate } from 'react-router-dom'; // Para redirigir después del login
+import { auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import '../../styles/login.css';
 
 const Login = () => {
-  // Estado local para los campos de entrada
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Para navegar después del login exitoso
+  const navigate = useNavigate();
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      navigate('/home');
+    } catch (error) {
+      setError("Error al iniciar sesión con Google.");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Limpiar el error previo
-
+    setError(null);
     try {
-      // Llamada a Firebase para iniciar sesión
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/home'); // Redirigir a la página principal (ajusta la ruta)
+      navigate('/home');
     } catch (error) {
       setError("Error de autenticación. Verifica tu correo y contraseña.");
     }
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
-        <div className="text-center mb-4">
+    <div className="login-container">
+      <div className="login-card">
+        <div className="login-header">
           <img
             src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
             alt="User avatar"
-            className="rounded-circle"
-            width="80"
+            className="login-avatar"
           />
-          <h3 className="mt-2">Iniciar Sesión</h3>
+          <h2>Iniciar Sesión</h2>
         </div>
-        {error && <div className="alert alert-danger">{error}</div>} {/* Mostrar errores */}
+
+        {error && <div className="alert-danger">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Correo electrónico</label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-envelope-fill"></i>
-              </span>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                placeholder="tucorreo@ejemplo.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
+          <div className="form-floating-group">
+            <input
+              type="email"
+              className="form-input"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder=" "
+            />
+            <label htmlFor="email">Correo electrónico</label>
+            <i className="bi bi-envelope-fill input-icon"></i>
           </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">Contraseña</label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-lock-fill"></i>
-              </span>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+
+          <div className="form-floating-group">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              className="form-input"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder=" "
+            />
+            <label htmlFor="password">Contraseña</label>
+            <i
+              className={`bi ${showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'} input-icon password-toggle`}
+              onClick={() => setShowPassword(!showPassword)}
+              title="Mostrar/Ocultar contraseña"
+            ></i>
+            <i className="bi bi-lock-fill input-icon lock-icon"></i>
           </div>
-          <div className="d-grid">
-            <button type="submit" className="btn btn-primary">Entrar</button>
+
+          <button type="submit" className="btn-primary w-100">Entrar</button>
+
+          <button type="button" className="google-btn" onClick={handleGoogleSignIn}>
+            <img
+              src="https://developers.google.com/identity/images/g-logo.png"
+              alt="Google"
+              className="google-icon"
+            />
+            Continuar con Google
+          </button>
+
+          <div className="register-link">
+            ¿No tienes cuenta?
+            <a onClick={() => navigate('/register')}>Regístrate aquí</a>
           </div>
         </form>
       </div>

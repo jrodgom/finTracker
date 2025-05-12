@@ -1,6 +1,5 @@
-// src/firebase.js
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 // Configuración de Firebase obtenida del panel de Firebase
 const firebaseConfig = {
@@ -16,4 +15,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export { auth, signInWithEmailAndPassword };
+// Exporta todo lo necesario
+export { auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider };
