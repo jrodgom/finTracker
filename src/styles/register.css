@@ -124,7 +124,10 @@
     transform: translateY(-50%);
   }
   
-  .register-btn {
+  /* ====================== */
+/*   Buttons & Links      */
+/* ====================== */
+.register-btn {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     border: none;
     padding: 0.8rem;
@@ -142,6 +145,27 @@
   .register-btn:hover {
     transform: scale(1.04);
     box-shadow: 0 12px 20px rgba(80, 227, 194, 0.2);
+  }
+  
+  .register-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)
+    );
+    transform: skewX(-20deg);
+    transition: left 0.75s ease;
+  }
+  
+  .register-btn:hover::after {
+    left: 125%;
   }
   
   .register-link {
@@ -164,6 +188,7 @@
     color: var(--secondary);
   }
   
+  
   .register-toast-error {
     position: fixed;
     bottom: 25px;
@@ -180,11 +205,65 @@
     z-index: 1000;
     animation: fadeInUp 0.4s ease forwards;
   }
-  
-  .toast-icon {
-    font-size: 1.2rem;
+
+
+  .register-toast-success {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
   }
   
+  .register-toast-error {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #dc3545;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+  }
+  
+  .toast-icon {
+    font-size: 20px;
+  }
+  
+  
+  .google-btn {
+    background-color: white;
+    color: #444;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+  
+  .google-btn i {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+
+  .google-logo {
+    width: 80px;
+    height: 80px;
+  }
   /* Animations */
   @keyframes fadeInUp {
     from {

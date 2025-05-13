@@ -25,6 +25,9 @@ const Login = () => {
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account', // fuerza selección de cuenta
+    });
     try {
       await signInWithPopup(auth, provider);
       navigate('/home');
@@ -97,7 +100,7 @@ const Login = () => {
           </div>
 
           <button type="button" className="google-btn" onClick={handleGoogleSignIn}>
-            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="google-icon" />
+          <img src="https://img.icons8.com/?size=512&id=17949&format=png" alt="Google" className="google-icon" />
             Continuar con Google
           </button>
         </form>

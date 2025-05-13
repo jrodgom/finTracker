@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, createUserWithEmailAndPassword } from '../../firebase';
+import { auth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '../../firebase';
 import '../../styles/register.css';
 
 const Register = () => {
@@ -8,13 +8,16 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
     if (password !== confirm) {
       setError('Las contraseñas no coinciden');
@@ -23,7 +26,8 @@ const Register = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate('/login'); // o la ruta que uses tras registro
+      setSuccess('Cuenta creada exitosamente');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       if (err.code === 'auth/email-already-in-use') {
         setError('El correo ya está en uso');
@@ -33,6 +37,25 @@ const Register = () => {
         setError('La contraseña es demasiado débil');
       } else {
         setError('Ocurrió un error al registrarse');
+      }
+    }
+  };
+
+  const handleGoogleRegister = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account', // fuerza selección de cuenta + confirmación
+    });
+
+    try {
+      await signInWithPopup(auth, provider);
+      setSuccess('Cuenta de Google vinculada exitosamente');
+      setTimeout(() => navigate('/home'), 3000);
+    } catch (err) {
+      if (err.code === 'auth/popup-closed-by-user') {
+        setError('La ventana de Google fue cerrada sin completar el registro.');
+      } else {
+        setError('Error al registrarse con Google');
       }
     }
   };
@@ -80,7 +103,7 @@ const Register = () => {
 
           <div className="register-floating-group">
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? 'text' : 'password'}
               className="register-input"
               id="register-confirm"
               value={confirm}
@@ -90,9 +113,23 @@ const Register = () => {
             />
             <label htmlFor="register-confirm">Confirmar contraseña</label>
             <i className="bi bi-shield-lock-fill register-icon lock-icon"></i>
+            <i
+              className={`bi ${showConfirmPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'} register-icon password-toggle`}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              title="Mostrar/Ocultar confirmación"
+            ></i>
           </div>
 
           <button type="submit" className="register-btn w-100">Registrarse</button>
+
+          <button
+            type="button"
+            className="google-btn w-100"
+            onClick={handleGoogleRegister}
+          >
+            <img src="https://img.icons8.com/?size=512&id=17949&format=png" alt="Google" className="google-icon" />
+            Registrarse con Google
+          </button>
 
           <div className="register-link">
             ¿Ya tienes una cuenta?
@@ -105,6 +142,13 @@ const Register = () => {
         <div className="register-toast-error">
           <i className="bi bi-exclamation-circle-fill toast-icon"></i>
           {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="register-toast-success">
+          <i className="bi bi-check-circle-fill toast-icon"></i>
+          {success}
         </div>
       )}
     </div>
