@@ -6,7 +6,7 @@
   --text: #1f2937;
   --light: #ffffff;
   --input-bg: rgba(255, 255, 255, 0.343);
-  --alert: #ef4444;
+  --alert: #ff0000;
   --shadow: rgba(0, 0, 0, 0.2);
 }
 
@@ -44,15 +44,73 @@ body {
   transition: box-shadow 0.3s ease;
 }
 
-/* Eliminado box-shadow al focus */
+.login-card.login-error {
+  box-shadow: 0 0 0 3px #ef4444, 0 10px 40px rgba(239, 68, 68, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+.toast-error {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.9rem 1.2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 1000;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.toast-icon {
+  font-size: 1.2rem;
+}
+
+.input-error {
+  animation: shake 0.3s ease-in-out;
+  border-color: var(--alert);
+}
+
+/* Floating alert bottom right */
+.floating-alert {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--alert);
+  color: white;
+  padding: 1rem 1.25rem;
+  border-radius: 0.6rem;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+  animation: fadeInUp 0.5s ease forwards;
+  z-index: 999;
+  font-size: 0.95rem;
+}
+
+
 .login-card:focus-within {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
 }
 
 @keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
   to {
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
