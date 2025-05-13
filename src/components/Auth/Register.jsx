@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/login.css';
+import { auth, createUserWithEmailAndPassword } from '../../firebase';
+import '../../styles/register.css';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -11,29 +12,43 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí iría la lógica de validación y envío a Firebase
+    setError(null);
+
     if (password !== confirm) {
       setError('Las contraseñas no coinciden');
       return;
     }
 
-    console.log({ email, password });
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate('/login'); // o la ruta que uses tras registro
+    } catch (err) {
+      if (err.code === 'auth/email-already-in-use') {
+        setError('El correo ya está en uso');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('El correo no es válido');
+      } else if (err.code === 'auth/weak-password') {
+        setError('La contraseña es demasiado débil');
+      } else {
+        setError('Ocurrió un error al registrarse');
+      }
+    }
   };
 
   return (
-    <div className="login-container">
-      <div className={`login-card ${error ? 'login-error' : ''}`}>
-        <div className="login-header">
+    <div className="register-container">
+      <div className={`register-card ${error ? 'register-error' : ''}`}>
+        <div className="register-header">
           <h2>Crear Cuenta</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="form-floating-group">
+          <div className="register-floating-group">
             <input
               type="email"
-              className="form-input"
+              className="register-input"
               id="register-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -41,13 +56,13 @@ const Register = () => {
               placeholder=" "
             />
             <label htmlFor="register-email">Correo electrónico</label>
-            <i className="bi bi-envelope-fill input-icon"></i>
+            <i className="bi bi-envelope-fill register-icon"></i>
           </div>
 
-          <div className="form-floating-group">
+          <div className="register-floating-group">
             <input
               type={showPassword ? 'text' : 'password'}
-              className="form-input"
+              className="register-input"
               id="register-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -55,18 +70,18 @@ const Register = () => {
               placeholder=" "
             />
             <label htmlFor="register-password">Contraseña</label>
-            <i className="bi bi-lock-fill input-icon lock-icon"></i>
+            <i className="bi bi-lock-fill register-icon lock-icon"></i>
             <i
-              className={`bi ${showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'} input-icon password-toggle`}
+              className={`bi ${showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'} register-icon password-toggle`}
               onClick={() => setShowPassword(!showPassword)}
               title="Mostrar/Ocultar contraseña"
             ></i>
           </div>
 
-          <div className="form-floating-group">
+          <div className="register-floating-group">
             <input
               type={showPassword ? 'text' : 'password'}
-              className="form-input"
+              className="register-input"
               id="register-confirm"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
@@ -74,10 +89,10 @@ const Register = () => {
               placeholder=" "
             />
             <label htmlFor="register-confirm">Confirmar contraseña</label>
-            <i className="bi bi-shield-lock-fill input-icon lock-icon"></i>
+            <i className="bi bi-shield-lock-fill register-icon lock-icon"></i>
           </div>
 
-          <button type="submit" className="btn-primary w-100">Registrarse</button>
+          <button type="submit" className="register-btn w-100">Registrarse</button>
 
           <div className="register-link">
             ¿Ya tienes una cuenta?
@@ -87,7 +102,7 @@ const Register = () => {
       </div>
 
       {error && (
-        <div className="toast-error">
+        <div className="register-toast-error">
           <i className="bi bi-exclamation-circle-fill toast-icon"></i>
           {error}
         </div>
