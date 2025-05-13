@@ -52,10 +52,10 @@ const Login = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="form-floating-group">
+          <div className={`form-floating-group ${shakeInputs ? 'input-error' : ''}`}>
             <input
               type="email"
-              className={`form-input ${shakeInputs ? 'input-error' : ''}`}
+              className="form-input"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -66,10 +66,10 @@ const Login = () => {
             <i className="bi bi-envelope-fill input-icon"></i>
           </div>
 
-          <div className="form-floating-group">
+          <div className={`form-floating-group ${shakeInputs ? 'input-error' : ''}`}>
             <input
               type={showPassword ? 'text' : 'password'}
-              className={`form-input ${shakeInputs ? 'input-error' : ''}`}
+              className="form-input"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

@@ -1,3 +1,6 @@
+/* ====================== */
+/*      Variables         */
+/* ====================== */
 :root {
   --bg-light: #f3f4f6;
   --bg-dark: #0d1117;
@@ -10,6 +13,9 @@
   --shadow: rgba(0, 0, 0, 0.2);
 }
 
+/* ====================== */
+/*        Global          */
+/* ====================== */
 body {
   margin: 0;
   padding: 0;
@@ -20,6 +26,15 @@ body {
   transition: background 5s ease;
 }
 
+h2 {
+  font-weight: 600;
+  color: var(--text);
+  animation: fadeInUp 1.2s ease forwards;
+}
+
+/* ====================== */
+/*     Login Container    */
+/* ====================== */
 .login-container {
   display: flex;
   justify-content: center;
@@ -45,98 +60,20 @@ body {
 }
 
 .login-card.login-error {
-  box-shadow: 0 0 0 3px #ef4444, 0 10px 40px rgba(239, 68, 68, 0.4);
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 0 10px 10px rgba(255, 0, 0, 0.301);
 }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(6px); }
-  75% { transform: translateX(-4px); }
-  100% { transform: translateX(0); }
-}
-
-.toast-error {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background-color: #ef4444;
-  color: white;
-  padding: 0.9rem 1.2rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  z-index: 1000;
-  animation: fadeInUp 0.4s ease forwards;
-}
-
-.toast-icon {
-  font-size: 1.2rem;
-}
-
-.input-error {
-  animation: shake 0.3s ease-in-out;
-  border-color: var(--alert);
-}
-
-/* Floating alert bottom right */
-.floating-alert {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: var(--alert);
-  color: white;
-  padding: 1rem 1.25rem;
-  border-radius: 0.6rem;
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
-  animation: fadeInUp 0.5s ease forwards;
-  z-index: 999;
-  font-size: 0.95rem;
-}
-
-
-.login-card:focus-within {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.login-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  animation: fadeInUp 1s ease forwards;
-}
-
-.login-avatar {
-  width: 70px;
-  border-radius: 50%;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  animation: bounceIn 1s ease-in-out;
-}
-
-h2 {
-  font-weight: 600;
-  color: var(--text);
-  animation: fadeInUp 1.2s ease forwards;
-}
-
+/* ====================== */
+/*       Form Fields      */
+/* ====================== */
 .form-floating-group {
   position: relative;
   margin-bottom: 2rem;
+}
+
+.form-floating-group.input-error {
+  animation: shake 0.3s ease-in-out;
+  border-radius: 0.75rem;
 }
 
 .form-input {
@@ -149,7 +86,6 @@ h2 {
   font-size: 1rem;
   transition: all 0.3s ease;
   outline: none;
-  /* Eliminado el blur en inputs */
   backdrop-filter: none;
 }
 
@@ -186,6 +122,9 @@ h2 {
   transform: scale(1.05);
 }
 
+/* ====================== */
+/*        Icons           */
+/* ====================== */
 .input-icon {
   position: absolute;
   left: 0.75rem;
@@ -205,6 +144,9 @@ h2 {
   transform: translateY(-50%);
 }
 
+/* ====================== */
+/*      Buttons & Links   */
+/* ====================== */
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   border: none;
@@ -218,7 +160,6 @@ h2 {
   overflow: hidden;
   z-index: 1;
   box-shadow: 0 4px 10px rgba(45, 138, 237, 0.4);
-  /* Eliminada la animación pulse */
 }
 
 .btn-primary:hover {
@@ -268,16 +209,6 @@ h2 {
   width: 20px;
 }
 
-.register-link-text {
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.register-link-text:hover {
-  text-decoration: underline;
-  color: var(--primary);
-}
-
 .register-link {
   text-align: center;
   margin-top: 1.5rem;
@@ -291,6 +222,7 @@ h2 {
   text-decoration: none;
   margin-left: 0.25rem;
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 
 .register-link a:hover {
@@ -320,6 +252,52 @@ h2 {
   padding: 0 0.5rem;
 }
 
+/* ====================== */
+/*      Feedback UI       */
+/* ====================== */
+.toast-error {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.9rem 1.2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 1000;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.toast-icon {
+  font-size: 1.2rem;
+}
+
+/* ====================== */
+/*     Animations         */
+/* ====================== */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes bounceIn {
   0% { transform: translateY(50px); opacity: 0; }
   60% { transform: translateY(-10px); }
@@ -341,5 +319,5 @@ h2 {
     opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0);
-  }
+  } 
 }
