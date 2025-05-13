@@ -1,20 +1,51 @@
 // src/components/dashboard/HomeDashboard.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  FiHome,
+  FiPlusCircle,
+  FiTarget,
+  FiBarChart2,
+  FiLogOut,
+} from 'react-icons/fi';
 import '../../styles/home.css';
 
 const HomeDashboard = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    navigate('/login');
+  };
+
   return (
     <div className="home-wrapper">
       <aside className="home-sidebar">
         <h4 className="sidebar-title">💰 FinTracker</h4>
         <nav className="sidebar-nav">
-          <a href="#">Dashboard</a>
-          <a href="#">Nuevo Movimiento</a>
-          <a href="#">Presupuestos</a>
-          <a href="#">Estadísticas</a>
-          <a href="#" className="logout-link">Cerrar sesión</a>
+          <a href="#">
+            <FiHome className="nav-icon" />
+            <span>Dashboard</span>
+          </a>
+          <a href="#">
+            <FiPlusCircle className="nav-icon" />
+            <span>Nuevo Movimiento</span>
+          </a>
+          <a href="#">
+            <FiTarget className="nav-icon" />
+            <span>Presupuestos</span>
+          </a>
+          <a href="#">
+            <FiBarChart2 className="nav-icon" />
+            <span>Estadísticas</span>
+          </a>
+          <a href="#" className="logout-link" onClick={handleLogout}>
+            <FiLogOut className="nav-icon" />
+            <span>Cerrar sesión</span>
+          </a>
         </nav>
       </aside>
+
       <main className="home-content">
         <div className="dashboard-header">
           <h2>Panel de Control</h2>
