@@ -35,6 +35,11 @@ h2 {
 /* ====================== */
 /*     Login Container    */
 /* ====================== */
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
 .login-container {
   display: flex;
   justify-content: center;
