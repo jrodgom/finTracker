@@ -1,9 +1,9 @@
-import React from 'react'
+// src/pages/HomePage.jsx
+import React from 'react';
+import HomeDashboard from '../components/Dashboard/HomeDashboard';
 
-function HomePage() {
-  return (
-    <div>HomePage</div>
-  )
-}
+const HomePage = () => {
+  return <HomeDashboard />;
+};
 
-export default HomePage
+export default HomePage;
