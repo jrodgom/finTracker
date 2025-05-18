@@ -1,7 +1,7 @@
 // src/components/NuevoMovimiento.jsx
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
-import '../../styles/home.css'
+import '../../styles/NuevoMovimiento.css';
 
 const categories = [
   'Alimentación',

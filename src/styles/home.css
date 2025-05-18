@@ -19,63 +19,6 @@
   background: linear-gradient(to bottom right, var(--bg-light), var(--secondary));
 }
 
-/* Sidebar */
-.home-sidebar {
-  width: 240px;
-  background: #1e293b;
-  color: white;
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-top-right-radius: 1.5rem;
-  border-bottom-right-radius: 1.5rem;
-  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.2);
-}
-
-.sidebar-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 3rem;
-  text-align: center;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex-grow: 1;
-}
-
-.nav-item {
-  all: unset;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: white;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease, color 0.2s ease;
-}
-
-.nav-item:hover,
-.nav-item.active {
-  background-color: rgba(255, 255, 255, 0.858);
-  transform: translateX(8px);
-  color: var(--primary);
-}
-
-.logout-link {
-  color: #f87171 !important;
-  margin-top: auto;
-}
-
-.nav-icon {
-  font-size: 1.2rem;
-}
-
 /* Main Content */
 .home-content {
   flex: 1;
@@ -264,20 +207,6 @@
     flex-direction: column;
   }
 
-  .home-sidebar {
-    width: 100px;
-    padding: 1rem 0.5rem;
-    border-radius: 0;
-  }
-
-  .sidebar-title {
-    display: none;
-  }
-
-  .nav-item span {
-    display: none;
-  }
-
   .home-content {
     padding: 1rem;
   }
@@ -286,47 +215,4 @@
     flex-direction: column;
     align-items: flex-start;
   }
-}
-
-.movement-form label {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-
-.movement-form input,
-.movement-form select,
-.movement-form textarea {
-  padding: 0.5rem;
-  font-size: 1rem;
-  margin-top: 0.3rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.movement-form fieldset {
-  border: none;
-  margin-bottom: 1rem;
-  padding: 0;
-  font-weight: 600;
-}
-
-.movement-form fieldset label {
-  font-weight: normal;
-  margin-right: 1rem;
-}
-
-.btn-submit {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn-submit:hover {
-  background-color: #0056b3;
 }

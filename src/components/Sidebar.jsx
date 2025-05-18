@@ -8,7 +8,7 @@ import {
   FiBarChart2,
   FiLogOut,
 } from 'react-icons/fi';
-import '../styles/home.css';
+import '../styles/sidebar.css';
 
 const Sidebar = () => {
   const navigate = useNavigate();
