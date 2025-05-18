@@ -22,11 +22,11 @@ const Sidebar = () => {
     <aside className="home-sidebar glass">
       <h4 className="sidebar-title">💰 FinTracker</h4>
       <nav className="sidebar-nav">
-        <button className="nav-item active">
+        <button className="nav-item active" onClick={() => navigate('/home')}>
           <FiHome className="nav-icon" />
           <span>Dashboard</span>
         </button>
-        <button className="nav-item">
+        <button className="nav-item" onClick={() => navigate('/nuevo')}>
           <FiPlusCircle className="nav-icon" />
           <span>Nuevo Movimiento</span>
         </button>
