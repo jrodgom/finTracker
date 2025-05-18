@@ -1,6 +1,6 @@
-// src/components/NuevoMovimiento.jsx
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
+import { FiEdit, FiDollarSign, FiCalendar, FiList, FiFileText } from 'react-icons/fi';
 import '../../styles/NuevoMovimiento.css';
 
 const categories = [
@@ -22,7 +22,7 @@ const NuevoMovimiento = () => {
     description: '',
   });
 
-  const [movimientos, setMovimientos] = useState([]); // local state para ver resultados
+  const [movimientos, setMovimientos] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,22 +35,21 @@ const NuevoMovimiento = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validación sencilla
     if (!formData.title || !formData.amount || !formData.date || !formData.category) {
       alert('Por favor, complete todos los campos requeridos.');
       return;
     }
 
-    const NuevoMovimiento = {
+    const nuevoMovimiento = {
       ...formData,
       amount: parseFloat(formData.amount),
       id: Date.now(),
     };
 
-    setMovimientos(prev => [NuevoMovimiento, ...prev]);
+    setMovimientos(prev => [nuevoMovimiento, ...prev]);
 
     alert('Movimiento agregado!');
-    // Reset form
+
     setFormData({
       title: '',
       amount: '',
@@ -66,23 +65,28 @@ const NuevoMovimiento = () => {
       <Sidebar />
 
       <main className="home-content fade-in">
-        <h2>Nuevo Movimiento</h2>
-        <form className="movement-form" onSubmit={handleSubmit} style={{ maxWidth: '400px' }}>
-          <label>
-            Título *
+        <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Nuevo Movimiento</h2>
+
+        <form className="movement-form" onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '0 auto' }}>
+          <div className="form-floating-group">
+            <FiEdit className="input-icon" />
             <input
+              id="title"
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
               required
               placeholder="Ej. Compra supermercado"
+              autoComplete="off"
             />
-          </label>
+            <label htmlFor="title">Título *</label>
+          </div>
 
-          <label>
-            Cantidad *
+          <div className="form-floating-group">
+            <FiDollarSign className="input-icon" />
             <input
+              id="amount"
               type="number"
               name="amount"
               value={formData.amount}
@@ -91,23 +95,28 @@ const NuevoMovimiento = () => {
               min="0.01"
               step="0.01"
               placeholder="Ej. 50.00"
+              autoComplete="off"
             />
-          </label>
+            <label htmlFor="amount">Cantidad *</label>
+          </div>
 
-          <label>
-            Fecha *
+          <div className="form-floating-group">
+            <FiCalendar className="input-icon" />
             <input
+              id="date"
               type="date"
               name="date"
               value={formData.date}
               onChange={handleChange}
               required
             />
-          </label>
+            <label htmlFor="date">Fecha *</label>
+          </div>
 
-          <label>
-            Categoría *
+          <div className="form-floating-group">
+            <FiList className="input-icon" />
             <select
+              id="category"
               name="category"
               value={formData.category}
               onChange={handleChange}
@@ -118,7 +127,8 @@ const NuevoMovimiento = () => {
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-          </label>
+            <label htmlFor="category">Categoría *</label>
+          </div>
 
           <fieldset>
             <legend>Tipo *</legend>
@@ -144,26 +154,27 @@ const NuevoMovimiento = () => {
             </label>
           </fieldset>
 
-          <label>
-            Descripción
+          <div className="form-floating-group">
+            <FiFileText className="input-icon" />
             <textarea
+              id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
               rows="3"
               placeholder="Opcional"
             />
-          </label>
+            <label htmlFor="description">Descripción</label>
+          </div>
 
           <button type="submit" className="btn-submit">Guardar Movimiento</button>
         </form>
 
-        {/* Mostrar movimientos agregados para ver que funciona */}
-        <section style={{ marginTop: '2rem' }}>
+        <section style={{ marginTop: '2rem', maxWidth: '400px', marginLeft: 'auto', marginRight: 'auto' }}>
           <h3>Movimientos agregados</h3>
           {movimientos.length === 0 && <p>No hay movimientos aún.</p>}
           {movimientos.map(m => (
-            <div key={m.id} style={{ borderBottom: '1px solid #ccc', padding: '0.5rem 0' }}>
+            <div key={m.id} className="movement-item">
               <strong>{m.title}</strong> - {m.type === 'ingreso' ? '+' : '-'} ${m.amount.toFixed(2)} <br />
               <small>{m.category} • {m.date}</small><br />
               <em>{m.description}</em>
