@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import NuevoMovimientoPage from './pages/NuevoMovimientoPage';
+import AñadirGastoPlazoPage from './pages/GastoPlazoPage';
 import PrivateRoute from './routes/PrivateRoute';
 
 function App() {
@@ -31,6 +32,14 @@ function App() {
           element={
             <PrivateRoute>
               <NuevoMovimientoPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/nuevo-gasto-plazo"
+          element={
+            <PrivateRoute>
+              <AñadirGastoPlazoPage />
             </PrivateRoute>
           }
         />
