@@ -30,6 +30,7 @@ const Login = () => {
     });
     try {
       await signInWithPopup(auth, provider);
+      localStorage.setItem('isAuthenticated', 'true');
       navigate('/home');
     } catch (error) {
       setError("Error al iniciar sesión con Google.");
@@ -41,6 +42,7 @@ const Login = () => {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      localStorage.setItem('isAuthenticated', 'true');
       navigate('/home');
     } catch (error) {
       setError("Error de autenticación. Verifica tu correo y contraseña.");
@@ -58,6 +60,7 @@ const Login = () => {
           <div className={`form-floating-group ${shakeInputs ? 'input-error' : ''}`}>
             <input
               type="email"
+              autoComplete='email'
               className="form-input"
               id="email"
               value={email}
@@ -80,13 +83,18 @@ const Login = () => {
               placeholder=" "
             />
             <label htmlFor="password">Contraseña</label>
+
+            {/* Icono candado */}
+            <i className="bi bi-lock-fill input-icon lock-icon"></i>
+
+            {/* Icono ojo */}
             <i
               className={`bi ${showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'} input-icon password-toggle`}
               onClick={() => setShowPassword(!showPassword)}
               title="Mostrar/Ocultar contraseña"
             ></i>
-            <i className="bi bi-lock-fill input-icon lock-icon"></i>
           </div>
+
 
           <button type="submit" className="btn-primary w-100">Entrar</button>
 
@@ -100,7 +108,7 @@ const Login = () => {
           </div>
 
           <button type="button" className="google-btn" onClick={handleGoogleSignIn}>
-          <img src="https://img.icons8.com/?size=512&id=17949&format=png" alt="Google" className="google-icon" />
+            <img src="https://img.icons8.com/?size=512&id=17949&format=png" alt="Google" className="google-icon" />
             Continuar con Google
           </button>
         </form>

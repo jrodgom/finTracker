@@ -15,6 +15,7 @@ const Sidebar = () => {
 
   const handleLogout = (e) => {
     e.preventDefault();
+    localStorage.removeItem('isAuthenticated');
     navigate('/login');
   };
 
