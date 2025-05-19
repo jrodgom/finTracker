@@ -216,3 +216,88 @@
     align-items: flex-start;
   }
 }
+
+.dashboard-plazos {
+  margin-top: 1rem;
+  overflow-x: auto;  /* scroll horizontal */
+  overflow-y: hidden; /* quitar scroll vertical */
+  padding-bottom: 0.5rem; /* espacio para la barra de scroll */
+  border-bottom: 1px solid #ddd;
+  /* altura automática para que tarjetas se vean completas */
+  max-height: none;
+  height: auto;
+  white-space: nowrap; /* previene salto de línea */
+}
+
+/* Contenedor flex horizontal para tarjetas */
+.plazos-container {
+  display: flex;
+  gap: 1rem;
+  /* width: max-content;  --> mejor quitar para evitar saltos */
+  /* Para que el contenedor crezca y tarjetas se alineen en fila */
+  white-space: nowrap;
+}
+
+/* Cada tarjeta */
+.plazo-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: 220px;
+  display: inline-block; /* inline-block para respetar white-space nowrap */
+  vertical-align: top; /* para alinear bien en línea */
+  flex-shrink: 0;
+  height: auto; /* que crezca con el contenido */
+}
+
+/* Imagen y contenido no cambian */
+.plazo-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 0.6rem;
+}
+
+.plazo-info {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.progress-bar-outer {
+  width: 100%;
+  background-color: #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  height: 20px;
+}
+
+.progress-bar-inner {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.2rem;
+  text-align: center;
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+  font-size: 0.8rem;
+}
+
+/* Scrollbar horizontal visible solo para esta sección */
+.dashboard-plazos::-webkit-scrollbar {
+  height: 8px;
+}
+
+.dashboard-plazos::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.dashboard-plazos::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.dashboard-plazos::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

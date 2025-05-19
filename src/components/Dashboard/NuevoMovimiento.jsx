@@ -131,7 +131,7 @@ const NuevoMovimiento = () => {
           </div>
 
           <fieldset>
-            <legend>Tipo *</legend>
+            <legend>Tipo:</legend>
             <label>
               <input
                 type="radio"
