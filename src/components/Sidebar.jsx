@@ -44,7 +44,7 @@ const Sidebar = () => {
 
         <button className={`nav-item ${isActive('/presupuestos')}`} onClick={() => navigate('/nuevo-gasto-plazo')}>
           <FiTarget className="nav-icon" />
-          <span>Presupuestos</span>
+          <span>Gastos a Plazos</span>
         </button>
 
         <button className={`nav-item ${isActive('/estadisticas')}`} onClick={() => navigate('/estadisticas')}>

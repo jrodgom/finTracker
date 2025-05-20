@@ -97,15 +97,15 @@ const HomeDashboard = () => {
         <div className="dashboard-summary">
           <div className="summary-card ingresos float-up">
             <h5>Ingresos</h5>
-            <p>$2,500</p>
+            <p>€2,500</p>
           </div>
           <div className="summary-card gastos float-up">
             <h5>Gastos</h5>
-            <p>$1,400</p>
+            <p>€1,400</p>
           </div>
           <div className="summary-card saldo float-up">
             <h5>Saldo</h5>
-            <p>$1,100</p>
+            <p>€1,100</p>
           </div>
         </div>
 

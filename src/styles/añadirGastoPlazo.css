@@ -1,86 +1,183 @@
+/* Overlay general */
 .ventana-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: row;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom right, var(--bg-light), var(--secondary));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Eliminado cualquier estilo al aside (sidebar) */
+
+
+/* Contenido del modal */
+.ventana-contenido {
+  max-width: 560px;
+  width: 100%;
+  background: var(--input-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 1.25rem;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 60px var(--shadow);
+  color: var(--text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: fadeInUp 1s ease forwards;
+  opacity: 0;
+  transform: translateY(40px);
+  position: relative;
+}
+
+/* Formulario */
+.formulario-gasto {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.formulario-gasto .form-floating-group {
+  position: relative;
+}
+
+/* Inputs */
+.formulario-gasto input,
+.formulario-gasto select,
+.formulario-gasto textarea {
+  width: 100%;
+  padding: 1.25rem 1rem 0.75rem 3rem;
+  font-size: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.3);
+  color: #333;
+  transition: all 0.3s ease;
+  outline: none;
+  box-sizing: border-box;
+  caret-color: var(--primary);
+}
+
+.formulario-gasto input::placeholder,
+.formulario-gasto textarea::placeholder {
+  color: transparent;
+}
+
+/* Label flotante */
+.form-floating-group label {
+  position: absolute;
+  left: 2.5rem;
+  top: 1.2rem;
+  font-size: 1rem;
+  color: var(--text-muted, #777);
+  transition: 0.3s ease all;
+  pointer-events: none;
+}
+
+.formulario-gasto input:focus + label,
+.formulario-gasto input:not(:placeholder-shown) + label {
+  top: -0.6rem;
+  left: 1rem;
+  background: var(--bg-light);
+  color: var(--primary);
+  font-size: 0.75rem;
+  padding: 0 0.4rem;
+  border-radius: 0.3rem;
+  transform: scale(1.05);
+}
+
+/* Iconos dentro del input */
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  font-size: 1.25rem;
+  color: var(--primary);
+  pointer-events: none;
+}
+
+/* Botones */
+.botones-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-guardar {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border: none;
+  padding: 0.9rem 1.4rem;
+  font-size: 1.1rem;
+  border-radius: 0.75rem;
+  color: var(--light);
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(45, 138, 237, 0.4);
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-guardar:hover {
+  transform: scale(1.04);
+  box-shadow: 0 12px 20px rgba(80, 227, 194, 0.2);
+}
+
+.btn-guardar:active {
+  transform: scale(0.98);
+  box-shadow: 0 6px 12px rgba(45, 138, 237, 0.6);
+}
+
+.btn-cancelar {
+  background-color: transparent;
+  border: 1px solid #999;
+  color: #555;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancelar:hover {
+  background-color: #eee;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .ventana-overlay > aside {
-    position: relative;
-    height: 100vh;
-    flex-shrink: 0;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
+}
+
+/* Responsive */
+@media (max-width: 480px) {
   .ventana-contenido {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    margin: 1rem;
-    flex-grow: 1;
-    max-width: 500px;
-    overflow-y: auto;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    padding: 2rem 1.5rem;
   }
-  
-  .formulario-gasto {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .formulario-gasto label {
-    display: flex;
-    flex-direction: column;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #333;
-  }
-  
+
   .formulario-gasto input {
-    margin-top: 0.3rem;
-    padding: 0.4rem 0.6rem;
+    padding-left: 2.5rem;
+    font-size: 0.95rem;
+  }
+
+  .input-icon {
+    left: 0.75rem;
     font-size: 1rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
   }
-  
-  .botones-formulario {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  
+
   .btn-guardar {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
     font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
+    padding: 0.7rem 1rem;
   }
-  
-  .btn-guardar:hover {
-    background-color: #3a9c3a;
-  }
-  
-  .btn-cancelar {
-    background-color: transparent;
-    border: 1px solid #999;
-    color: #555;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
-  .btn-cancelar:hover {
-    background-color: #eee;
-  }
-  
+}
