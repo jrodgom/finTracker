@@ -51,7 +51,6 @@ const Clientes = () => {
 
       if (!response.ok) throw new Error('Error al guardar los cambios');
 
-      // Actualiza el estado
       setClientes(prev =>
         prev.map(cliente =>
           cliente.id === id ? { ...cliente, ...formData } : cliente
@@ -90,9 +89,9 @@ const Clientes = () => {
           ) : (
             <div className="clientes-list">
               {clientes.map((cliente) => (
-                <div key={cliente.id} className="cliente-card">
+                <div key={cliente.id} className="clientes-card">
                   {editandoId === cliente.id ? (
-                    <div className="cliente-info">
+                    <div className="clientes-info">
                       <input
                         type="text"
                         name="nombre"
@@ -116,7 +115,7 @@ const Clientes = () => {
                       />
                     </div>
                   ) : (
-                    <div className="cliente-info">
+                    <div className="clientes-info">
                       <strong>{cliente.nombre} {cliente.apellidos}</strong>
                       <p>📧 {cliente.correo}</p>
                       {cliente.fechaCreacion && (
@@ -125,22 +124,22 @@ const Clientes = () => {
                     </div>
                   )}
 
-                  <div className="cliente-actions">
+                  <div className="clientes-actions">
                     {editandoId === cliente.id ? (
                       <>
-                        <button className="btn-editar" onClick={() => handleGuardar(cliente.id)}>
+                        <button className="clientes-btn-editar" onClick={() => handleGuardar(cliente.id)}>
                           💾 Guardar
                         </button>
-                        <button className="btn-eliminar" onClick={handleCancelar}>
+                        <button className="clientes-btn-eliminar" onClick={handleCancelar}>
                           ❌ Cancelar
                         </button>
                       </>
                     ) : (
                       <>
-                        <button className="btn-editar" onClick={() => handleEditar(cliente)}>
+                        <button className="clientes-btn-editar" onClick={() => handleEditar(cliente)}>
                           ✏️ Editar
                         </button>
-                        <button className="btn-eliminar" onClick={() => handleEliminar(cliente.id)}>
+                        <button className="clientes-btn-eliminar" onClick={() => handleEliminar(cliente.id)}>
                           🗑️ Eliminar
                         </button>
                       </>
