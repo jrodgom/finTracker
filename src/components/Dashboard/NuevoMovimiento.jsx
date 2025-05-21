@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
 import { FiEdit, FiDollarSign, FiCalendar, FiList, FiFileText } from 'react-icons/fi';
-import '../../styles/NuevoMovimiento.css';
+import '../../styles/nuevoMovimiento.css';
 
 const categories = [
   'Alimentación',
@@ -131,7 +131,7 @@ const NuevoMovimiento = () => {
           </div>
 
           <fieldset>
-            <legend>Tipo *</legend>
+            <legend>Tipo:</legend>
             <label>
               <input
                 type="radio"

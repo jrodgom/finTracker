@@ -15,6 +15,7 @@ const Sidebar = () => {
 
   const handleLogout = (e) => {
     e.preventDefault();
+    localStorage.removeItem('isAuthenticated');
     navigate('/login');
   };
 
@@ -41,9 +42,9 @@ const Sidebar = () => {
           <span>Nuevo Movimiento</span>
         </button>
 
-        <button className={`nav-item ${isActive('/presupuestos')}`} onClick={() => navigate('/presupuestos')}>
+        <button className={`nav-item ${isActive('/presupuestos')}`} onClick={() => navigate('/nuevo-gasto-plazo')}>
           <FiTarget className="nav-icon" />
-          <span>Presupuestos</span>
+          <span>Gastos a Plazos</span>
         </button>
 
         <button className={`nav-item ${isActive('/estadisticas')}`} onClick={() => navigate('/estadisticas')}>
