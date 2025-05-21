@@ -26,16 +26,16 @@ const Sidebar = () => {
     <aside className="home-sidebar glass">
       <h4 className="sidebar-title">💰 FinTracker</h4>
       <nav className="sidebar-nav">
-        <button 
-          className={`nav-item ${isActive('/home')}`} 
+        <button
+          className={`nav-item ${isActive('/home')}`}
           onClick={() => navigate('/home')}
         >
           <FiHome className="nav-icon" />
           <span>Dashboard</span>
         </button>
 
-        <button 
-          className={`nav-item ${isActive('/nuevo')}`} 
+        <button
+          className={`nav-item ${isActive('/nuevo')}`}
           onClick={() => navigate('/nuevo')}
         >
           <FiPlusCircle className="nav-icon" />
@@ -50,6 +50,13 @@ const Sidebar = () => {
         <button className={`nav-item ${isActive('/estadisticas')}`} onClick={() => navigate('/estadisticas')}>
           <FiBarChart2 className="nav-icon" />
           <span>Estadísticas</span>
+        </button>
+        
+        <button
+          className={`nav-item ${isActive('/clientes')}`}
+          onClick={() => navigate('/clientes')}>
+          <FiBarChart2 className="nav-icon" /> {/* Puedes usar otro icono si quieres */}
+          <span>Clientes</span>
         </button>
 
         <button className="nav-item logout-link" onClick={handleLogout}>

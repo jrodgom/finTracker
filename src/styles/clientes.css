@@ -1,0 +1,22 @@
+/* clientes.css */
+.clientes-container {
+    padding: 2rem;
+    width: 100%;
+  }
+  
+  .clientes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  .clientes-table th,
+  .clientes-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+  }
+  
+  .clientes-table th {
+    background-color: #f5f5f5;
+  }
+  
