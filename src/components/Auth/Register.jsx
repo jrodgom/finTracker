@@ -4,6 +4,8 @@ import { auth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvid
 import '../../styles/register.css';
 
 const Register = () => {
+  const [nombre, setNombre] = useState('');
+  const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -26,6 +28,18 @@ const Register = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+
+      // ➕ Enviar datos al backend
+      await fetch('http://localhost:8098/api/v1/clientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre,
+          apellidos,
+          correo: email
+        }),
+      });
+
       setSuccess('Cuenta creada exitosamente');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
@@ -43,12 +57,23 @@ const Register = () => {
 
   const handleGoogleRegister = async () => {
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({
-      prompt: 'select_account', // fuerza selección de cuenta + confirmación
-    });
+    provider.setCustomParameters({ prompt: 'select_account' });
 
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Enviar al backend con nombre vacío si no está disponible
+      await fetch('http://localhost:8098/api/v1/clientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: user.displayName || '',
+          apellidos: '',
+          correo: user.email,
+        }),
+      });
+
       setSuccess('Cuenta de Google vinculada exitosamente');
       setTimeout(() => navigate('/home'), 3000);
     } catch (err) {
@@ -68,6 +93,34 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
+          <div className="register-floating-group">
+            <input
+              type="text"
+              className="register-input"
+              id="register-nombre"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+              placeholder=" "
+            />
+            <label htmlFor="register-nombre">Nombre</label>
+            <i className="bi bi-person-fill register-icon"></i>
+          </div>
+
+          <div className="register-floating-group">
+            <input
+              type="text"
+              className="register-input"
+              id="register-apellidos"
+              value={apellidos}
+              onChange={(e) => setApellidos(e.target.value)}
+              required
+              placeholder=" "
+            />
+            <label htmlFor="register-apellidos">Apellidos</label>
+            <i className="bi bi-person-lines-fill register-icon"></i>
+          </div>
+
           <div className="register-floating-group">
             <input
               type="email"
