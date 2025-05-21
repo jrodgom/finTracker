@@ -1,59 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../Sidebar';
-import '../../styles/nuevoMovimiento.css'; // reutilizamos el estilo
+import '../../styles/clientes.css'; // nuevo archivo de estilos
 
-const ClientesPage = () => {
+const Clientes = () => {
   const [clientes, setClientes] = useState([]);
 
   useEffect(() => {
-    // Simulamos carga de clientes; sustituye con llamada real a tu API si la tienes
     const fetchClientes = async () => {
-      const data = [
-        {
-          id: '1',
-          nombre: 'Juan Pérez',
-          apellidos: 'Pérez Gómez',
-          correo: 'juan@example.com',
-          uidFirebase: 'abc123',
-        },
-        {
-          id: '2',
-          nombre: 'Ana García',
-          apellidos: 'García López',
-          correo: 'ana@example.com',
-          uidFirebase: 'def456',
-        },
-        {
-          id: '3',
-          nombre: 'Prueba enrique',
-          apellidos: 'enriquito',
-          correo: 'enriquecabreado@gmail.com',
-          uidFirebase: null,
-        },
-      ];
-
-      setClientes(data);
+      try {
+        const response = await fetch('http://localhost:8098/api/v1/clientes');
+        if (!response.ok) throw new Error('Error al obtener los clientes');
+        const data = await response.json();
+        setClientes(data);
+      } catch (error) {
+        console.error('Error cargando clientes:', error);
+      }
     };
 
     fetchClientes();
   }, []);
 
-  return (
-    <div className="home-wrapper">
-      <Sidebar />
-      <main className="home-content fade-in">
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Lista de Clientes</h2>
+  const handleEditar = (id) => {
+    console.log('Editar cliente con ID:', id);
+    // Aquí puedes navegar a una página de edición, por ejemplo:
+    // navigate(`/clientes/editar/${id}`);
+  };
 
-        <section style={{ maxWidth: '600px', margin: '0 auto' }}>
+  const handleEliminar = async (id) => {
+    const confirmar = window.confirm('¿Estás seguro de que deseas eliminar este cliente?');
+    if (!confirmar) return;
+
+    try {
+      const response = await fetch(`http://localhost:8098/api/v1/clientes/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Error al eliminar el cliente');
+
+      setClientes((prev) => prev.filter((cliente) => cliente.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar cliente:', error);
+    }
+  };
+
+  return (
+    <div className="clientes-wrapper">
+      <Sidebar />
+      <main className="clientes-content">
+        <h2 className="clientes-title">Lista de Clientes</h2>
+
+        <section className="clientes-list-section">
           {clientes.length === 0 ? (
-            <p>No hay clientes registrados.</p>
+            <p className="clientes-empty">No hay clientes registrados.</p>
           ) : (
-            <div className="movement-form" style={{ padding: '2rem' }}>
+            <div className="clientes-list">
               {clientes.map((cliente) => (
-                <div key={cliente.id} className="movement-item">
-                  <strong>{cliente.nombre} {cliente.apellidos}</strong><br />
-                  <span>📧 {cliente.correo}</span><br />
-                  <span>🔑 UID Firebase: {cliente.uidFirebase || 'No asignado'}</span>
+                <div key={cliente.id} className="cliente-card">
+                  <div className="cliente-info">
+                    <strong>{cliente.nombre} {cliente.apellidos}</strong>
+                    <p>📧 {cliente.correo}</p>
+                    {cliente.fechaCreacion && (
+                      <p>📅 Creado: {new Date(cliente.fechaCreacion).toLocaleDateString()}</p>
+                    )}
+                  </div>
+                  <div className="cliente-actions">
+                    <button className="btn-editar" onClick={() => handleEditar(cliente.id)}>
+                      ✏️ Editar
+                    </button>
+                    <button className="btn-eliminar" onClick={() => handleEliminar(cliente.id)}>
+                      🗑️ Eliminar
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -64,4 +80,4 @@ const ClientesPage = () => {
   );
 };
 
-export default ClientesPage;
+export default Clientes;
