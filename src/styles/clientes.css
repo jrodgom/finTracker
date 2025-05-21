@@ -1,7 +1,21 @@
-.clientes-wrapper {
+:root {
+    --primary: #2d8aed;
+    --secondary: #dceeff;
+    --bg-light: #f8fbff;
+    --input-bg: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.08);
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  .clientes-wrapper {
     display: flex;
+    flex-direction: row;
     height: 100vh;
     background: linear-gradient(to bottom right, var(--bg-light), var(--secondary));
+    overflow: hidden;
   }
   
   .clientes-content {
@@ -9,17 +23,20 @@
     padding: 3rem 2rem;
     overflow-y: auto;
     animation: fadeInUp 0.6s ease-out;
+    max-height: 100vh;
   }
   
   .clientes-title {
     text-align: center;
     margin-bottom: 2rem;
     font-size: 2rem;
+    font-weight: 700;
     color: var(--primary);
+    animation: popIn 0.5s ease-out;
   }
   
   .clientes-list-section {
-    max-width: 700px;
+    max-width: 800px;
     margin: 0 auto;
   }
   
@@ -27,6 +44,8 @@
     text-align: center;
     color: #555;
     font-style: italic;
+    font-size: 1.1rem;
+    margin-top: 2rem;
   }
   
   .clientes-list {
@@ -41,50 +60,84 @@
     padding: 1.5rem 2rem;
     box-shadow: 0 10px 30px var(--shadow);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    flex-direction: column;
+    gap: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.4s ease;
+    animation: fadeInCard 0.4s ease-in-out;
   }
   
   .cliente-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 45px rgba(45, 138, 237, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 45px rgba(45, 138, 237, 0.2);
+  }
+  
+  .cliente-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  
+  .cliente-info strong {
+    font-size: 1.2rem;
+    color: #222;
   }
   
   .cliente-info p {
-    margin: 0.3rem 0;
+    margin: 0;
     color: #444;
+    font-size: 0.95rem;
+  }
+  
+  .cliente-info input {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .cliente-info input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 138, 237, 0.15);
   }
   
   .cliente-actions {
     display: flex;
+    justify-content: flex-end;
     gap: 0.75rem;
+    flex-wrap: wrap;
   }
   
   .btn-editar,
   .btn-eliminar {
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.55rem 1.1rem;
     border-radius: 0.75rem;
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
   }
   
   .btn-editar {
     background: linear-gradient(to right, var(--primary), #34a0ff);
     color: white;
+    box-shadow: 0 5px 15px rgba(45, 138, 237, 0.2);
   }
   
   .btn-eliminar {
     background: linear-gradient(to right, #ff4b4b, #d80032);
     color: white;
+    box-shadow: 0 5px 15px rgba(255, 75, 75, 0.2);
   }
   
   .btn-editar:hover,
   .btn-eliminar:hover {
     transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     opacity: 0.95;
   }
   
@@ -96,6 +149,60 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInCard {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes popIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  /* === Responsive Design === */
+  
+  @media (max-width: 768px) {
+    .clientes-content {
+      padding: 2rem 1.5rem;
+    }
+  
+    .cliente-card {
+      padding: 1.2rem 1.5rem;
+    }
+  
+    .cliente-actions {
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .clientes-title {
+      font-size: 1.5rem;
+    }
+  
+    .btn-editar,
+    .btn-eliminar {
+      font-size: 0.85rem;
+      padding: 0.5rem 0.8rem;
+    }
+  
+    .cliente-info strong {
+      font-size: 1rem;
     }
   }
   

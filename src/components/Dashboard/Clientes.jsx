@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../Sidebar';
-import '../../styles/clientes.css'; // nuevo archivo de estilos
+import '../../styles/clientes.css';
 
 const Clientes = () => {
   const [clientes, setClientes] = useState([]);
+  const [editandoId, setEditandoId] = useState(null);
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -20,10 +22,45 @@ const Clientes = () => {
     fetchClientes();
   }, []);
 
-  const handleEditar = (id) => {
-    console.log('Editar cliente con ID:', id);
-    // Aquí puedes navegar a una página de edición, por ejemplo:
-    // navigate(`/clientes/editar/${id}`);
+  const handleEditar = (cliente) => {
+    setEditandoId(cliente.id);
+    setFormData({
+      nombre: cliente.nombre,
+      apellidos: cliente.apellidos,
+      correo: cliente.correo
+    });
+  };
+
+  const handleCancelar = () => {
+    setEditandoId(null);
+    setFormData({});
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleGuardar = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8098/api/v1/clientes/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error('Error al guardar los cambios');
+
+      // Actualiza el estado
+      setClientes(prev =>
+        prev.map(cliente =>
+          cliente.id === id ? { ...cliente, ...formData } : cliente
+        )
+      );
+      setEditandoId(null);
+    } catch (error) {
+      console.error('Error guardando cambios:', error);
+    }
   };
 
   const handleEliminar = async (id) => {
@@ -35,8 +72,7 @@ const Clientes = () => {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Error al eliminar el cliente');
-
-      setClientes((prev) => prev.filter((cliente) => cliente.id !== id));
+      setClientes(prev => prev.filter(cliente => cliente.id !== id));
     } catch (error) {
       console.error('Error al eliminar cliente:', error);
     }
@@ -55,20 +91,60 @@ const Clientes = () => {
             <div className="clientes-list">
               {clientes.map((cliente) => (
                 <div key={cliente.id} className="cliente-card">
-                  <div className="cliente-info">
-                    <strong>{cliente.nombre} {cliente.apellidos}</strong>
-                    <p>📧 {cliente.correo}</p>
-                    {cliente.fechaCreacion && (
-                      <p>📅 Creado: {new Date(cliente.fechaCreacion).toLocaleDateString()}</p>
-                    )}
-                  </div>
+                  {editandoId === cliente.id ? (
+                    <div className="cliente-info">
+                      <input
+                        type="text"
+                        name="nombre"
+                        value={formData.nombre}
+                        onChange={handleInputChange}
+                        placeholder="Nombre"
+                      />
+                      <input
+                        type="text"
+                        name="apellidos"
+                        value={formData.apellidos}
+                        onChange={handleInputChange}
+                        placeholder="Apellidos"
+                      />
+                      <input
+                        type="email"
+                        name="correo"
+                        value={formData.correo}
+                        onChange={handleInputChange}
+                        placeholder="Correo"
+                      />
+                    </div>
+                  ) : (
+                    <div className="cliente-info">
+                      <strong>{cliente.nombre} {cliente.apellidos}</strong>
+                      <p>📧 {cliente.correo}</p>
+                      {cliente.fechaCreacion && (
+                        <p>📅 Creado: {new Date(cliente.fechaCreacion).toLocaleDateString()}</p>
+                      )}
+                    </div>
+                  )}
+
                   <div className="cliente-actions">
-                    <button className="btn-editar" onClick={() => handleEditar(cliente.id)}>
-                      ✏️ Editar
-                    </button>
-                    <button className="btn-eliminar" onClick={() => handleEliminar(cliente.id)}>
-                      🗑️ Eliminar
-                    </button>
+                    {editandoId === cliente.id ? (
+                      <>
+                        <button className="btn-editar" onClick={() => handleGuardar(cliente.id)}>
+                          💾 Guardar
+                        </button>
+                        <button className="btn-eliminar" onClick={handleCancelar}>
+                          ❌ Cancelar
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="btn-editar" onClick={() => handleEditar(cliente)}>
+                          ✏️ Editar
+                        </button>
+                        <button className="btn-eliminar" onClick={() => handleEliminar(cliente.id)}>
+                          🗑️ Eliminar
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
