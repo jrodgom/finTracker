@@ -1,6 +1,12 @@
-// src/components/dashboard/AñadirGastoPlazo.jsx
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
+import {
+  FiEdit,
+  FiDollarSign,
+  FiCalendar,
+  FiList,
+  FiImage
+} from 'react-icons/fi';
 import '../../styles/añadirGastoPlazo.css';
 
 const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
@@ -46,13 +52,15 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
   };
 
   return (
-    <div className="ventana-overlay">
+    <div className="gastoPlazo-wrapper">
       <Sidebar />
-      <div className="ventana-contenido">
-        <h2>Añadir gasto a plazos</h2>
-        <form onSubmit={manejarEnvio} className="formulario-gasto">
-          <label>
-            Nombre del gasto*:
+
+      <main className="gastoPlazo-content fade-in">
+
+        <form className="gastoPlazo-form" onSubmit={manejarEnvio}>
+          <h2 className="gastoPlazo-title">Añadir Gasto a Plazos</h2>
+          <div className="gastoPlazo-floating-group">
+            <FiEdit className="input-icon" />
             <input
               type="text"
               name="nombre"
@@ -61,10 +69,11 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
               placeholder="Ej: iPhone 13 Pro"
               required
             />
-          </label>
+            <label>Nombre del gasto *</label>
+          </div>
 
-          <label>
-            Valor total (€)*:
+          <div className="gastoPlazo-floating-group">
+            <FiDollarSign className="input-icon" />
             <input
               type="number"
               name="valor"
@@ -72,12 +81,14 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
               onChange={manejarCambio}
               min="0"
               step="0.01"
+              placeholder="Ej: 999.99"
               required
             />
-          </label>
+            <label>Valor total (€) *</label>
+          </div>
 
-          <label>
-            Fecha de inicio*:
+          <div className="gastoPlazo-floating-group">
+            <FiCalendar className="input-icon" />
             <input
               type="date"
               name="fechaInicio"
@@ -85,10 +96,11 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
               onChange={manejarCambio}
               required
             />
-          </label>
+            <label>Fecha de inicio *</label>
+          </div>
 
-          <label>
-            Fecha de finalización*:
+          <div className="gastoPlazo-floating-group">
+            <FiCalendar className="input-icon" />
             <input
               type="date"
               name="fechaFin"
@@ -96,22 +108,25 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
               onChange={manejarCambio}
               required
             />
-          </label>
+            <label>Fecha de finalización *</label>
+          </div>
 
-          <label>
-            Número de cuotas*:
+          <div className="gastoPlazo-floating-group">
+            <FiList className="input-icon" />
             <input
               type="number"
               name="cuotas"
               value={formulario.cuotas}
               onChange={manejarCambio}
               min="1"
+              placeholder="Ej: 12"
               required
             />
-          </label>
+            <label>Número de cuotas *</label>
+          </div>
 
-          <label>
-            URL de imagen (opcional):
+          <div className="gastoPlazo-floating-group">
+            <FiImage className="input-icon" />
             <input
               type="url"
               name="imagen"
@@ -119,16 +134,18 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
               onChange={manejarCambio}
               placeholder="https://..."
             />
-          </label>
+            <label>URL de imagen (opcional)</label>
+          </div>
 
-          <div className="botones-formulario">
-            <button type="submit" className="btn-guardar">Guardar</button>
+          <div className="gastoPlazo-botones">
+            <button type="submit" className="btn-submit">Guardar</button>
             <button type="button" className="btn-cancelar" onClick={onCerrar}>Cancelar</button>
           </div>
         </form>
-      </div>
+      </main>
     </div>
   );
+
 };
 
 export default AñadirGastoPlazo;
