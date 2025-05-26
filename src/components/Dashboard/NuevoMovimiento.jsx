@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Sidebar from '../Sidebar';
 import { FiEdit, FiDollarSign, FiCalendar, FiList, FiFileText } from 'react-icons/fi';
 import '../../styles/nuevoMovimiento.css';
@@ -22,7 +23,10 @@ const NuevoMovimiento = () => {
     description: '',
   });
 
-  const [movimientos, setMovimientos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+
+  const clientEmail = localStorage.getItem('clientEmail') || 'usuario@example.com';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,32 +36,43 @@ const NuevoMovimiento = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setFeedback(null);
 
     if (!formData.title || !formData.amount || !formData.date || !formData.category) {
       alert('Por favor, complete todos los campos requeridos.');
       return;
     }
 
-    const nuevoMovimiento = {
-      ...formData,
-      amount: parseFloat(formData.amount),
-      id: Date.now(),
+    const movimiento = {
+      clientEmail,
+      titulo: formData.title,
+      cantidad: parseFloat(formData.amount),
+      fecha: formData.date,
+      categoria: formData.category,
+      tipo: formData.type.toUpperCase(), // API espera "INGRESO" o "GASTO"
+      descripcion: formData.description || '',
     };
 
-    setMovimientos(prev => [nuevoMovimiento, ...prev]);
-
-    alert('Movimiento agregado!');
-
-    setFormData({
-      title: '',
-      amount: '',
-      date: '',
-      category: '',
-      type: 'ingreso',
-      description: '',
-    });
+    try {
+      setLoading(true);
+      await axios.post('http://ec2-54-152-205-216.compute-1.amazonaws.com:8099/api/v1/transactions', movimiento);
+      setFeedback({ success: true, message: 'Movimiento guardado correctamente.' });
+      setFormData({
+        title: '',
+        amount: '',
+        date: '',
+        category: '',
+        type: 'ingreso',
+        description: '',
+      });
+    } catch (err) {
+      console.error('Error al guardar el movimiento:', err);
+      setFeedback({ success: false, message: 'Error al guardar el movimiento.' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -167,20 +182,22 @@ const NuevoMovimiento = () => {
             <label htmlFor="description">Descripción</label>
           </div>
 
-          <button type="submit" className="btn-submit">Guardar Movimiento</button>
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? 'Guardando...' : 'Guardar Movimiento'}
+          </button>
         </form>
 
-        <section style={{ marginTop: '2rem', maxWidth: '400px', marginLeft: 'auto', marginRight: 'auto' }}>
-          <h3>Movimientos agregados</h3>
-          {movimientos.length === 0 && <p>No hay movimientos aún.</p>}
-          {movimientos.map(m => (
-            <div key={m.id} className="movement-item">
-              <strong>{m.title}</strong> - {m.type === 'ingreso' ? '+' : '-'} ${m.amount.toFixed(2)} <br />
-              <small>{m.category} • {m.date}</small><br />
-              <em>{m.description}</em>
-            </div>
-          ))}
-        </section>
+        {feedback && (
+          <div
+            style={{
+              textAlign: 'center',
+              marginTop: '1rem',
+              color: feedback.success ? 'green' : 'red',
+            }}
+          >
+            {feedback.message}
+          </div>
+        )}
       </main>
     </div>
   );

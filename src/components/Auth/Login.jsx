@@ -26,10 +26,12 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({
-      prompt: 'select_account', // fuerza selección de cuenta
+      prompt: 'select_account',
     });
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const userEmail = result.user.email;
+      localStorage.setItem('clientEmail', userEmail);
       localStorage.setItem('isAuthenticated', 'true');
       navigate('/home');
     } catch (error) {
@@ -41,7 +43,9 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userEmail = userCredential.user.email;
+      localStorage.setItem('clientEmail', userEmail);
       localStorage.setItem('isAuthenticated', 'true');
       navigate('/home');
     } catch (error) {
