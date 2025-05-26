@@ -11,12 +11,23 @@ const formatDateEU = (dateStr) => {
   return `${day}/${month}/${year}`;
 };
 
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(value);
+};
+
 const HomeDashboard = () => {
   const [ingresos, setIngresos] = useState(0);
   const [gastos, setGastos] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [movimientos, setMovimientos] = useState([]); // Estado para movimientos recientes
+
   const fechaActual = new Date();
-  const clientEmail = localStorage.getItem('clientEmail') || 'usuario@example.com';
+
+  const clientEmail = localStorage.getItem('clientEmail') || '';
+  const clientName = localStorage.getItem('clientName') || 'Usuario';
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -24,6 +35,7 @@ const HomeDashboard = () => {
         const res = await axios.get('http://ec2-54-152-205-216.compute-1.amazonaws.com:8099/api/v1/transactions');
         const todas = res.data;
 
+        // Filtrar transacciones del cliente y del mes actual
         const transaccionesMes = todas.filter(
           (t) =>
             t.clientEmail === clientEmail &&
@@ -31,6 +43,7 @@ const HomeDashboard = () => {
             new Date(t.fecha).getFullYear() === fechaActual.getFullYear()
         );
 
+        // Calcular ingresos y gastos totales
         const totalIngresos = transaccionesMes
           .filter((t) => t.tipo === 'INGRESO')
           .reduce((sum, t) => sum + t.cantidad, 0);
@@ -41,6 +54,13 @@ const HomeDashboard = () => {
 
         setIngresos(totalIngresos);
         setGastos(totalGastos);
+
+        // Ordenar transacciones por fecha descendente y limitar a 5
+        const movimientosOrdenados = transaccionesMes
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+          .slice(0, 5);
+
+        setMovimientos(movimientosOrdenados);
       } catch (err) {
         console.error('Error obteniendo transacciones:', err);
       } finally {
@@ -48,12 +68,16 @@ const HomeDashboard = () => {
       }
     };
 
-    fetchTransactions();
-  }, []);
+    if (clientEmail) {
+      fetchTransactions();
+    } else {
+      setLoading(false);
+    }
+  }, [clientEmail, fechaActual]);
 
   const saldo = ingresos - gastos;
 
-  // Datos estáticos de ejemplo para gastos a plazos
+  // Datos estáticos para gastos a plazos
   const gastosPlazos = [
     {
       nombre: 'iPhone 13 Pro',
@@ -88,9 +112,9 @@ const HomeDashboard = () => {
     const totalMeses =
       Math.ceil(
         (fechaFin.getFullYear() - fechaInicio.getFullYear()) * 12 +
-        fechaFin.getMonth() -
-        fechaInicio.getMonth() +
-        1
+          fechaFin.getMonth() -
+          fechaInicio.getMonth() +
+          1
       ) || gasto.cuotas;
 
     const cuotaMensual = gasto.valor / gasto.cuotas;
@@ -128,8 +152,11 @@ const HomeDashboard = () => {
         <div className="dashboard-header">
           <h2>Panel de Control</h2>
           <div className="user-info">
-            <span>{clientEmail}</span>
-            <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt="perfil" />
+            <span>{clientName}</span>
+            <img
+              src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"
+              alt="perfil"
+            />
           </div>
         </div>
 
@@ -137,21 +164,17 @@ const HomeDashboard = () => {
         <div className="dashboard-summary">
           <div className="summary-card ingresos float-up">
             <h5>Ingresos</h5>
-            <p>{loading ? 'Cargando...' : `€${ingresos.toFixed(2)}`}</p>
+            <p>{loading ? 'Cargando...' : formatCurrency(ingresos)}</p>
           </div>
           <div className="summary-card gastos float-up">
             <h5>Gastos</h5>
-            <p>{loading ? 'Cargando...' : `€${gastos.toFixed(2)}`}</p>
+            <p>{loading ? 'Cargando...' : formatCurrency(gastos)}</p>
           </div>
           <div className="summary-card saldo float-up">
             <h5>Saldo</h5>
-            <p>{loading ? 'Cargando...' : `€${saldo.toFixed(2)}`}</p>
+            <p>{loading ? 'Cargando...' : formatCurrency(saldo)}</p>
           </div>
         </div>
-
-        {!loading && ingresos === 0 && gastos === 0 && (
-          <p className="no-transactions-msg">No hay transacciones este mes.</p>
-        )}
 
         {/* Gastos a plazos */}
         <div className="dashboard-plazos fade-in">
@@ -162,12 +185,12 @@ const HomeDashboard = () => {
                 <img src={gasto.imagen} alt={gasto.nombre} className="plazo-image" />
                 <div className="plazo-info">
                   <strong>{gasto.nombre}</strong>
-                  <p>Valor total: €{gasto.valor}</p>
+                  <p>Valor total: {formatCurrency(gasto.valor)}</p>
                   <p>Inicio: {gasto.fechaInicioFormatted}</p>
                   <p>Fin estimado: {gasto.fechaFinFormatted}</p>
-                  <p>Importe acumulado: €{gasto.acumulado}</p>
-                  <p>Restante por pagar: €{gasto.restante}</p>
-                  <p>Cuota mensual: €{gasto.cuotaMensual.toFixed(2)}</p>
+                  <p>Importe acumulado: {formatCurrency(gasto.acumulado)}</p>
+                  <p>Restante por pagar: {formatCurrency(gasto.restante)}</p>
+                  <p>Cuota mensual: {formatCurrency(gasto.cuotaMensual)}</p>
                   <div className="progress-bar-outer">
                     <div
                       className="progress-bar-inner progress-animate"
@@ -182,28 +205,34 @@ const HomeDashboard = () => {
           </div>
         </div>
 
-        {/* Gráfico y movimientos: se actualizarán más adelante */}
+        {/* Gráfico y movimientos */}
         <h5>Balance mensual</h5>
         <div className="chart-placeholder">[ Gráfico aquí ]</div>
 
         <div className="dashboard-movements fade-in">
           <h5>Movimientos recientes</h5>
-          <div className="movement-card">
-            <div>
-              <strong>Compra supermercado</strong>
-              <br />
-              <small>Alimentación • 05/05/2025</small>
-            </div>
-            <span className="gasto">- $60.00</span>
-          </div>
-          <div className="movement-card">
-            <div>
-              <strong>Sueldo</strong>
-              <br />
-              <small>Ingreso • 01/05/2025</small>
-            </div>
-            <span className="ingreso">+ $2,000.00</span>
-          </div>
+
+          {loading ? (
+            <p>Cargando movimientos...</p>
+          ) : movimientos.length === 0 ? (
+            <p>No hay movimientos este mes.</p>
+          ) : (
+            movimientos.map((mov, idx) => (
+              <div className="movement-card" key={idx}>
+                <div>
+                  <strong>{mov.descripcion || mov.tipo}</strong>
+                  <br />
+                  <small>
+                    {mov.tipo.charAt(0).toUpperCase() + mov.tipo.slice(1)} • {formatDateEU(mov.fecha)}
+                  </small>
+                </div>
+                <span className={mov.tipo === 'GASTO' ? 'gasto' : 'ingreso'}>
+                  {mov.tipo === 'GASTO' ? '- ' : '+ '}
+                  {formatCurrency(mov.cantidad)}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </main>
     </div>

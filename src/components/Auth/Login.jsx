@@ -30,8 +30,12 @@ const Login = () => {
     });
     try {
       const result = await signInWithPopup(auth, provider);
-      const userEmail = result.user.email;
+      const user = result.user;
+      const userEmail = user.email;
+      const userName = user.displayName || userEmail || 'Usuario';
+
       localStorage.setItem('clientEmail', userEmail);
+      localStorage.setItem('clientName', userName);
       localStorage.setItem('isAuthenticated', 'true');
       navigate('/home');
     } catch (error) {
@@ -44,8 +48,12 @@ const Login = () => {
     setError(null);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const userEmail = userCredential.user.email;
+      const user = userCredential.user;
+      const userEmail = user.email;
+      const userName = user.displayName || userEmail || 'Usuario';
+
       localStorage.setItem('clientEmail', userEmail);
+      localStorage.setItem('clientName', userName);
       localStorage.setItem('isAuthenticated', 'true');
       navigate('/home');
     } catch (error) {
@@ -98,7 +106,6 @@ const Login = () => {
               title="Mostrar/Ocultar contraseña"
             ></i>
           </div>
-
 
           <button type="submit" className="btn-primary w-100">Entrar</button>
 
