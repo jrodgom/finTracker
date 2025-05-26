@@ -10,7 +10,7 @@ const Clientes = () => {
   useEffect(() => {
     const fetchClientes = async () => {
       try {
-        const response = await fetch('http://localhost:8098/api/v1/clientes');
+        const response = await fetch('http://ec2-54-152-205-216.compute-1.amazonaws.com:8098/api/v1/clientes');
         if (!response.ok) throw new Error('Error al obtener los clientes');
         const data = await response.json();
         setClientes(data);
@@ -43,7 +43,7 @@ const Clientes = () => {
 
   const handleGuardar = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8098/api/v1/clientes/${id}`, {
+      const response = await fetch(`http://ec2-54-152-205-216.compute-1.amazonaws.com:8098/api/v1/clientes/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -67,7 +67,7 @@ const Clientes = () => {
     if (!confirmar) return;
 
     try {
-      const response = await fetch(`http://localhost:8098/api/v1/clientes/${id}`, {
+      const response = await fetch(`http://ec2-54-152-205-216.compute-1.amazonaws.com:8098/api/v1/clientes/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Error al eliminar el cliente');

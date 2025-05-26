@@ -90,7 +90,7 @@ const HomeDashboard = () => {
           <h2>Panel de Control</h2>
           <div className="user-info">
             <span>usuario</span>
-            <img src="https://i.pravatar.cc/40" alt="perfil" />
+            <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt="perfil" />
           </div>
         </div>
 
