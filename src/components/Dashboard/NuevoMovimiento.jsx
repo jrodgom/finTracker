@@ -39,22 +39,25 @@ const NuevoMovimiento = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFeedback(null);
-
+  
     if (!formData.title || !formData.amount || !formData.date || !formData.category) {
       alert('Por favor, complete todos los campos requeridos.');
       return;
     }
-
+  
+    const currentTime = new Date().toTimeString().split(' ')[0]; // hh:mm:ss
+    const fechaCompleta = new Date(`${formData.date}T${currentTime}`).toISOString();
+  
     const movimiento = {
       clientEmail,
       titulo: formData.title,
       cantidad: parseFloat(formData.amount),
-      fecha: formData.date,
+      fecha: fechaCompleta,
       categoria: formData.category,
       tipo: formData.type.toUpperCase(),
       descripcion: formData.description || '',
     };
-
+  
     try {
       setLoading(true);
       await axios.post('http://fintracker-rgjd.us-east-1.elasticbeanstalk.com:81/api/v1/transactions', movimiento);
@@ -73,7 +76,7 @@ const NuevoMovimiento = () => {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <div className="home-wrapper">
