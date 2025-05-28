@@ -30,7 +30,7 @@ const Register = () => {
       await createUserWithEmailAndPassword(auth, email, password);
 
       // ➕ Enviar datos al backend
-      await fetch('http://ec2-54-152-205-216.compute-1.amazonaws.com:8098/api/v1/clientes', {
+      await fetch('http://fintracker-rgjd.us-east-1.elasticbeanstalk.com/api/v1/clientes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -64,7 +64,7 @@ const Register = () => {
       const user = result.user;
 
       // Enviar al backend con nombre vacío si no está disponible
-      await fetch('http://ec2-54-152-205-216.compute-1.amazonaws.com:8098/api/v1/clientes', {
+      await fetch('http://fintracker-rgjd.us-east-1.elasticbeanstalk.com/api/v1/clientes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -32,7 +32,7 @@ const HomeDashboard = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await axios.get('http://ec2-54-152-205-216.compute-1.amazonaws.com:8099/api/v1/transactions');
+        const res = await axios.get('http://fintracker-rgjd.us-east-1.elasticbeanstalk.com:81/api/v1/transactions');
         const todas = res.data;
 
         // Filtrar transacciones del cliente y del mes actual
@@ -176,6 +176,32 @@ const HomeDashboard = () => {
           </div>
         </div>
 
+        <div className="dashboard-movements fade-in">
+          <h5>Movimientos recientes</h5>
+
+          {loading ? (
+            <p>Cargando movimientos...</p>
+          ) : movimientos.length === 0 ? (
+            <p>No hay movimientos este mes.</p>
+          ) : (
+            movimientos.map((mov, idx) => (
+              <div className="movement-card" key={idx}>
+                <div>
+                  <strong>{mov.descripcion || mov.tipo}</strong>
+                  <br />
+                  <small>
+                    {mov.tipo.charAt(0).toUpperCase() + mov.tipo.slice(1)} • {formatDateEU(mov.fecha)}
+                  </small>
+                </div>
+                <span className={mov.tipo === 'GASTO' ? 'gasto' : 'ingreso'}>
+                  {mov.tipo === 'GASTO' ? '- ' : '+ '}
+                  {formatCurrency(mov.cantidad)}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+
         {/* Gastos a plazos */}
         <div className="dashboard-plazos fade-in">
           <h5>Gastos a Plazos</h5>
@@ -209,31 +235,7 @@ const HomeDashboard = () => {
         <h5>Balance mensual</h5>
         <div className="chart-placeholder">[ Gráfico aquí ]</div>
 
-        <div className="dashboard-movements fade-in">
-          <h5>Movimientos recientes</h5>
-
-          {loading ? (
-            <p>Cargando movimientos...</p>
-          ) : movimientos.length === 0 ? (
-            <p>No hay movimientos este mes.</p>
-          ) : (
-            movimientos.map((mov, idx) => (
-              <div className="movement-card" key={idx}>
-                <div>
-                  <strong>{mov.descripcion || mov.tipo}</strong>
-                  <br />
-                  <small>
-                    {mov.tipo.charAt(0).toUpperCase() + mov.tipo.slice(1)} • {formatDateEU(mov.fecha)}
-                  </small>
-                </div>
-                <span className={mov.tipo === 'GASTO' ? 'gasto' : 'ingreso'}>
-                  {mov.tipo === 'GASTO' ? '- ' : '+ '}
-                  {formatCurrency(mov.cantidad)}
-                </span>
-              </div>
-            ))
-          )}
-        </div>
+        
       </main>
     </div>
   );

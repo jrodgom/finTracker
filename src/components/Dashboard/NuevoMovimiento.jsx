@@ -51,13 +51,13 @@ const NuevoMovimiento = () => {
       cantidad: parseFloat(formData.amount),
       fecha: formData.date,
       categoria: formData.category,
-      tipo: formData.type.toUpperCase(), // API espera "INGRESO" o "GASTO"
+      tipo: formData.type.toUpperCase(),
       descripcion: formData.description || '',
     };
 
     try {
       setLoading(true);
-      await axios.post('http://ec2-54-152-205-216.compute-1.amazonaws.com:8099/api/v1/transactions', movimiento);
+      await axios.post('http://fintracker-rgjd.us-east-1.elasticbeanstalk.com:81/api/v1/transactions', movimiento);
       setFeedback({ success: true, message: 'Movimiento guardado correctamente.' });
       setFormData({
         title: '',
