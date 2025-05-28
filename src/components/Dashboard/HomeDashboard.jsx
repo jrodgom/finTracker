@@ -112,9 +112,9 @@ const HomeDashboard = () => {
     const totalMeses =
       Math.ceil(
         (fechaFin.getFullYear() - fechaInicio.getFullYear()) * 12 +
-          fechaFin.getMonth() -
-          fechaInicio.getMonth() +
-          1
+        fechaFin.getMonth() -
+        fechaInicio.getMonth() +
+        1
       ) || gasto.cuotas;
 
     const cuotaMensual = gasto.valor / gasto.cuotas;
@@ -187,11 +187,23 @@ const HomeDashboard = () => {
             movimientos.map((mov, idx) => (
               <div className="movement-card" key={idx}>
                 <div>
-                  <strong>{mov.descripcion || mov.tipo}</strong>
+                  <strong>{mov.titulo || mov.tipo}</strong>
                   <br />
                   <small>
                     {mov.tipo.charAt(0).toUpperCase() + mov.tipo.slice(1)} • {formatDateEU(mov.fecha)}
                   </small>
+                  {mov.descripcion && (
+                    <>
+                      <br />
+                      <small>Descripción: {mov.descripcion}</small>
+                    </>
+                  )}
+                  {mov.categoria && (
+                    <>
+                      <br />
+                      <small>Categoría: {mov.categoria}</small>
+                    </>
+                  )}
                 </div>
                 <span className={mov.tipo === 'GASTO' ? 'gasto' : 'ingreso'}>
                   {mov.tipo === 'GASTO' ? '- ' : '+ '}
@@ -235,7 +247,7 @@ const HomeDashboard = () => {
         <h5>Balance mensual</h5>
         <div className="chart-placeholder">[ Gráfico aquí ]</div>
 
-        
+
       </main>
     </div>
   );

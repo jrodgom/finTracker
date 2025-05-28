@@ -24,7 +24,7 @@ const Sidebar = () => {
 
   return (
     <aside className="home-sidebar glass">
-      <h4 className="sidebar-title">💰 FinTracker</h4>
+      <h4 className="sidebar-title">FinTracker</h4>
       <nav className="sidebar-nav">
         <button
           className={`nav-item ${isActive('/home')}`}
