@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Sidebar from '../Sidebar';
 import {
   FiEdit,
@@ -7,6 +8,7 @@ import {
   FiList,
   FiImage
 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/añadirGastoPlazo.css';
 
 const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
@@ -19,46 +21,80 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
     imagen: '',
   });
 
+  const [mensaje, setMensaje] = useState(null); // para el toast
+  const [tipoMensaje, setTipoMensaje] = useState(''); // 'exito' o 'error'
+  const navigate = useNavigate();
+
   const manejarCambio = (e) => {
     const { name, value } = e.target;
-    setFormulario((prev) => ({ ...prev, [name]: value }));
+    setFormulario((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const manejarEnvio = (e) => {
+  const manejarEnvio = async (e) => {
     e.preventDefault();
 
-    if (
-      !formulario.nombre ||
-      !formulario.valor ||
-      !formulario.fechaInicio ||
-      !formulario.fechaFin ||
-      !formulario.cuotas
-    ) {
-      alert('Por favor, completa todos los campos obligatorios.');
+    const { nombre, valor, fechaInicio, fechaFin, cuotas, imagen } = formulario;
+
+    if (!nombre || !valor || !fechaInicio || !cuotas) {
+      setMensaje('Por favor, completa todos los campos obligatorios.');
+      setTipoMensaje('error');
       return;
     }
 
     const nuevoGasto = {
-      nombre: formulario.nombre,
-      valor: parseFloat(formulario.valor),
-      fechaInicio: formulario.fechaInicio,
-      fechaFin: formulario.fechaFin,
-      cuotas: parseInt(formulario.cuotas),
-      imagen: formulario.imagen || 'https://via.placeholder.com/100',
+      titulo: nombre,
+      cantidad: parseFloat(valor),
+      fecha: fechaInicio,
+      totalCuotas: parseInt(cuotas, 10),
+      descripcion: "Compra a plazos"
     };
 
-    onGuardar(nuevoGasto);
-    onCerrar();
+    try {
+      const response = await axios.post(
+        'http://fintracker-rgjd.us-east-1.elasticbeanstalk.com:81/api/v1/installments',
+        nuevoGasto,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log('Respuesta del servidor:', response.data);
+
+      if (onGuardar) onGuardar(response.data);
+
+      setMensaje('¡Gasto guardado correctamente!');
+      setTipoMensaje('exito');
+
+      setTimeout(() => {
+        navigate('/home');
+      }, 2000); // Espera 2 segundos antes de redirigir
+
+    } catch (error) {
+      console.error('Error al guardar el gasto:', error.response || error);
+      setMensaje('Hubo un error al guardar el gasto.');
+      setTipoMensaje('error');
+    }
   };
+
+  useEffect(() => {
+    if (mensaje) {
+      const timer = setTimeout(() => setMensaje(null), 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [mensaje]);
 
   return (
     <div className="gastoPlazo-wrapper">
       <Sidebar />
-
       <main className="gastoPlazo-content fade-in">
-
         <form className="gastoPlazo-form" onSubmit={manejarEnvio}>
           <h2 className="gastoPlazo-title">Añadir Gasto a Plazos</h2>
+
           <div className="gastoPlazo-floating-group">
             <FiEdit className="input-icon" />
             <input
@@ -142,10 +178,16 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
             <button type="button" className="btn-cancelar" onClick={onCerrar}>Cancelar</button>
           </div>
         </form>
+
+        {mensaje && (
+          <div className={`toast-${tipoMensaje}`}>
+            <i className={`bi ${tipoMensaje === 'exito' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'} toast-icon`}></i>
+            {mensaje}
+          </div>
+        )}
       </main>
     </div>
   );
-
 };
 
 export default AñadirGastoPlazo;
