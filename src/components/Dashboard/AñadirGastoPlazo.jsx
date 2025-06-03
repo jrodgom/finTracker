@@ -8,7 +8,6 @@ import {
   FiList,
   FiImage
 } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
 import '../../styles/añadirGastoPlazo.css';
 
 const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
@@ -21,9 +20,8 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
     imagen: '',
   });
 
-  const [mensaje, setMensaje] = useState(null); // para el toast
-  const [tipoMensaje, setTipoMensaje] = useState(''); // 'exito' o 'error'
-  const navigate = useNavigate();
+  const [mensaje, setMensaje] = useState(null);
+  const [tipoMensaje, setTipoMensaje] = useState('');
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -37,9 +35,16 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
     e.preventDefault();
 
     const { nombre, valor, fechaInicio, fechaFin, cuotas, imagen } = formulario;
+    const clientEmail = localStorage.getItem('clientEmail');
 
-    if (!nombre || !valor || !fechaInicio || !cuotas) {
+    if (!nombre || !valor || !fechaInicio || !cuotas || !fechaFin) {
       setMensaje('Por favor, completa todos los campos obligatorios.');
+      setTipoMensaje('error');
+      return;
+    }
+
+    if (!clientEmail) {
+      setMensaje('No se encontró el correo del usuario. Intenta iniciar sesión nuevamente.');
       setTipoMensaje('error');
       return;
     }
@@ -49,7 +54,10 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
       cantidad: parseFloat(valor),
       fecha: fechaInicio,
       totalCuotas: parseInt(cuotas, 10),
-      descripcion: "Compra a plazos"
+      descripcion: "Compra a plazos",
+      fechaFin: fechaFin,
+      imagen: imagen || null,
+      clientEmail: clientEmail
     };
 
     try {
@@ -70,9 +78,14 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
       setMensaje('¡Gasto guardado correctamente!');
       setTipoMensaje('exito');
 
-      setTimeout(() => {
-        navigate('/home');
-      }, 2000); // Espera 2 segundos antes de redirigir
+      setFormulario({
+        nombre: '',
+        valor: '',
+        fechaInicio: '',
+        fechaFin: '',
+        cuotas: '',
+        imagen: '',
+      });
 
     } catch (error) {
       console.error('Error al guardar el gasto:', error.response || error);

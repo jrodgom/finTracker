@@ -25,6 +25,7 @@ const HomeDashboard = () => {
   const [gastos, setGastos] = useState(0);
   const [loading, setLoading] = useState(true);
   const [movimientos, setMovimientos] = useState([]);
+  const [gastosPlazos, setGastosPlazos] = useState([]);
 
   const fechaActual = new Date();
   const clientEmail = localStorage.getItem('clientEmail') || '';
@@ -54,12 +55,7 @@ const HomeDashboard = () => {
 
         setIngresos(totalIngresos);
         setGastos(totalGastos);
-
-        const movimientosOrdenados = [...transaccionesMes]
-          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-          .slice(0, 3);
-
-        setMovimientos(transaccionesMes); // guardamos todos los movimientos del mes
+        setMovimientos(transaccionesMes);
       } catch (err) {
         console.error('Error obteniendo transacciones:', err);
       } finally {
@@ -67,8 +63,19 @@ const HomeDashboard = () => {
       }
     };
 
+    const fetchGastosPlazos = async () => {
+      try {
+        const res = await axios.get('http://fintracker-rgjd.us-east-1.elasticbeanstalk.com:81/api/v1/installments');
+        const dataCliente = res.data.filter(g => g.clientEmail === clientEmail);
+        setGastosPlazos(dataCliente);
+      } catch (error) {
+        console.error('Error obteniendo gastos a plazos:', error);
+      }
+    };
+
     if (clientEmail) {
       fetchTransactions();
+      fetchGastosPlazos();
     } else {
       setLoading(false);
     }
@@ -76,27 +83,19 @@ const HomeDashboard = () => {
 
   const saldo = ingresos - gastos;
 
-  // Generar datos para gráfico diario
   const daysInMonth = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0).getDate();
-  const dailyData = Array.from({ length: daysInMonth }, (_, i) => {
-    const day = i + 1;
-    return {
-      label: String(day).padStart(2, '0'),
-      ingresos: 0,
-      gastos: 0,
-      saldo: 0,
-    };
-  });
+  const dailyData = Array.from({ length: daysInMonth }, (_, i) => ({
+    label: String(i + 1).padStart(2, '0'),
+    ingresos: 0,
+    gastos: 0,
+    saldo: 0,
+  }));
 
   movimientos.forEach((mov) => {
-    const movDate = new Date(mov.fecha);
-    const day = movDate.getDate();
+    const day = new Date(mov.fecha).getDate();
     const index = day - 1;
-    if (mov.tipo === 'INGRESO') {
-      dailyData[index].ingresos += mov.cantidad;
-    } else if (mov.tipo === 'GASTO') {
-      dailyData[index].gastos += mov.cantidad;
-    }
+    if (mov.tipo === 'INGRESO') dailyData[index].ingresos += mov.cantidad;
+    else if (mov.tipo === 'GASTO') dailyData[index].gastos += mov.cantidad;
   });
 
   let acumulado = 0;
@@ -105,48 +104,13 @@ const HomeDashboard = () => {
     day.saldo = acumulado;
   });
 
-  const gastosPlazos = [
-    {
-      nombre: 'iPhone 13 Pro',
-      valor: 436,
-      fechaInicio: '2025-03-01',
-      fechaFin: '2025-05-01',
-      cuotas: 3,
-      imagen: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-13-pro-family-hero',
-    },
-    {
-      nombre: 'Televisor 4K',
-      valor: 900,
-      fechaInicio: '2025-01-15',
-      fechaFin: '2025-06-15',
-      cuotas: 6,
-      imagen: 'https://cdn-icons-png.flaticon.com/512/992/992700.png',
-    },
-    {
-      nombre: 'Ordenador portátil',
-      valor: 1200,
-      fechaInicio: '2025-02-01',
-      fechaFin: '2025-07-01',
-      cuotas: 6,
-      imagen: 'https://cdn-icons-png.flaticon.com/512/2920/2920216.png',
-    },
-  ];
-
   const gastosConCalculos = gastosPlazos.map((gasto) => {
     const fechaInicio = new Date(gasto.fechaInicio);
     const fechaFin = new Date(gasto.fechaFin);
-
-    const totalMeses = Math.ceil(
-      (fechaFin.getFullYear() - fechaInicio.getFullYear()) * 12 +
-      fechaFin.getMonth() - fechaInicio.getMonth() + 1
-    ) || gasto.cuotas;
-
+    const totalMeses = Math.ceil((fechaFin.getFullYear() - fechaInicio.getFullYear()) * 12 + fechaFin.getMonth() - fechaInicio.getMonth() + 1) || gasto.cuotas;
     const cuotaMensual = gasto.valor / gasto.cuotas;
 
-    let mesesPagados =
-      (fechaActual.getFullYear() - fechaInicio.getFullYear()) * 12 +
-      fechaActual.getMonth() - fechaInicio.getMonth() + 1;
-
+    let mesesPagados = (fechaActual.getFullYear() - fechaInicio.getFullYear()) * 12 + fechaActual.getMonth() - fechaInicio.getMonth() + 1;
     mesesPagados = Math.min(Math.max(mesesPagados, 0), totalMeses);
 
     const acumulado = +(cuotaMensual * mesesPagados).toFixed(2);
@@ -215,18 +179,8 @@ const HomeDashboard = () => {
                     <small>
                       {mov.tipo.charAt(0).toUpperCase() + mov.tipo.slice(1)} • {formatDateEU(mov.fecha)}
                     </small>
-                    {mov.descripcion && (
-                      <>
-                        <br />
-                        <small>Descripción: {mov.descripcion}</small>
-                      </>
-                    )}
-                    {mov.categoria && (
-                      <>
-                        <br />
-                        <small>Categoría: {mov.categoria}</small>
-                      </>
-                    )}
+                    {mov.descripcion && <><br /><small>Descripción: {mov.descripcion}</small></>}
+                    {mov.categoria && <><br /><small>Categoría: {mov.categoria}</small></>}
                   </div>
                   <span className={mov.tipo === 'GASTO' ? 'gasto' : 'ingreso'}>
                     {mov.tipo === 'GASTO' ? '- ' : '+ '}
@@ -239,30 +193,36 @@ const HomeDashboard = () => {
 
         <div className="dashboard-plazos fade-in">
           <h5>Gastos a Plazos</h5>
-          <div className="plazos-container">
-            {gastosConCalculos.map((gasto, idx) => (
-              <div className="plazo-card" key={idx}>
-                <img src={gasto.imagen} alt={`Imagen de ${gasto.nombre}`} className="plazo-image" />
-                <div className="plazo-info">
-                  <strong>{gasto.nombre}</strong>
-                  <p>Valor total: {formatCurrency(gasto.valor)}</p>
-                  <p>Inicio: {gasto.fechaInicioFormatted}</p>
-                  <p>Fin estimado: {gasto.fechaFinFormatted}</p>
-                  <p>Importe acumulado: {formatCurrency(gasto.acumulado)}</p>
-                  <p>Restante por pagar: {formatCurrency(gasto.restante)}</p>
-                  <p>Cuota mensual: {formatCurrency(gasto.cuotaMensual)}</p>
-                  <div className="progress-bar-outer">
-                    <div
-                      className="progress-bar-inner progress-animate"
-                      style={{ width: `${gasto.progreso}%` }}
-                    >
-                      {gasto.progreso}% pagado
+          {gastosConCalculos.length === 0 ? (
+            <p>No hay gastos a plazos registrados.</p>
+          ) : (
+            <div className="plazos-container">
+              {gastosConCalculos.map((gasto, idx) => (
+                <div className="plazo-card" key={idx}>
+                  {gasto.imagen && (
+                    <img src={gasto.imagen} alt={`Imagen de ${gasto.nombre}`} className="plazo-image" />
+                  )}
+                  <div className="plazo-info">
+                    <strong>{gasto.nombre}</strong>
+                    <p>Valor total: {formatCurrency(gasto.valor)}</p>
+                    <p>Inicio: {gasto.fechaInicioFormatted}</p>
+                    <p>Fin estimado: {gasto.fechaFinFormatted}</p>
+                    <p>Importe acumulado: {formatCurrency(gasto.acumulado)}</p>
+                    <p>Restante por pagar: {formatCurrency(gasto.restante)}</p>
+                    <p>Cuota mensual: {formatCurrency(gasto.cuotaMensual)}</p>
+                    <div className="progress-bar-outer">
+                      <div
+                        className="progress-bar-inner progress-animate"
+                        style={{ width: `${gasto.progreso}%` }}
+                      >
+                        {gasto.progreso}% pagado
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <h5>Resumen del mes</h5>
