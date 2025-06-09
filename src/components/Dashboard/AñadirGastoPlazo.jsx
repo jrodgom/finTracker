@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../Sidebar';
 import { FiEdit, FiDollarSign, FiCalendar, FiList, FiImage } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/añadirGastoPlazo.css';
 
-const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
+const AñadirGastoPlazo = ({ onGuardar }) => {
   const [formulario, setFormulario] = useState({
     nombre: '',
     valor: '',
@@ -16,6 +17,7 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
 
   const [mensaje, setMensaje] = useState(null);
   const [tipoMensaje, setTipoMensaje] = useState('');
+  const navigate = useNavigate();
 
   const manejarCambio = ({ target: { name, value } }) => {
     setFormulario((prev) => ({ ...prev, [name]: value }));
@@ -68,6 +70,9 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
       });
 
       if (onGuardar) onGuardar(data);
+
+      // Espera 2 segundos y redirige
+      setTimeout(() => navigate('/home'), 2000);
     } catch (error) {
       console.error('Error al guardar el gasto:', error.response || error);
       setTipoMensaje('error');
@@ -169,7 +174,9 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
 
           <div className="gastoPlazo-botones">
             <button type="submit" className="btn-submit">Guardar</button>
-            <button type="button" className="btn-cancelar" onClick={onCerrar}>Cancelar</button>
+            <button type="button" className="btn-cancelar" onClick={() => navigate('/home')}>
+              Cancelar
+            </button>
           </div>
         </form>
 
