@@ -85,7 +85,16 @@ const HomeDashboard = () => {
   // Cálculo de gastos a plazos
   const gastosConCalculos = gastosPlazos.map((g) => {
     const inicio = new Date(g.fecha);
-    const fin = new Date(g.fechaFin);
+  
+    let fin;
+    if (g.fechaFin) {
+      fin = new Date(g.fechaFin);
+    } else {
+      fin = new Date(inicio);
+      const cuotas = g.totalCuotas || 1;
+      fin.setMonth(fin.getMonth() + cuotas - 1);
+    }
+  
     const totalMeses = g.totalCuotas || ((fin.getFullYear() - inicio.getFullYear()) * 12 + (fin.getMonth() - inicio.getMonth()) + 1);
     const cuotaMensual = g.cantidad / totalMeses;
   
@@ -109,9 +118,10 @@ const HomeDashboard = () => {
       restante,
       progreso,
       fechaInicioFormatted: formatDateEU(g.fecha),
-      fechaFinFormatted: formatDateEU(g.fechaFin),
+      fechaFinFormatted: formatDateEU(fin),
     };
-  });  
+  });
+  
 
   return (
     <div className="home-wrapper">
