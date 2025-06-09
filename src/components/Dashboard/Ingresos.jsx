@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../Sidebar';
-import '../../styles/clientes.css';  // Usa la misma hoja de estilos o crea una específica
+import '../../styles/ingresos.css';
 
 const formatDateEU = (d) => new Date(d).toLocaleDateString('es-ES');
 const formatCurrency = (v) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(v);
@@ -17,7 +17,6 @@ const Ingresos = () => {
         const response = await fetch('http://fintracker-rgjd.us-east-1.elasticbeanstalk.com:81/api/v1/transactions');
         if (!response.ok) throw new Error('Error al obtener los ingresos');
         const data = await response.json();
-        // Filtrar solo ingresos del cliente
         const ingresosCliente = data.filter(t => t.clientEmail === clientEmail && t.tipo === 'INGRESO');
         setIngresos(ingresosCliente);
       } catch (error) {
@@ -56,12 +55,11 @@ const Ingresos = () => {
         body: JSON.stringify({
           ...formData,
           cantidad: parseFloat(formData.cantidad),
-          tipo: 'INGRESO', // aseguramos que siga siendo ingreso
+          tipo: 'INGRESO',
           clientEmail,
         }),
       });
       if (!response.ok) throw new Error('Error al guardar los cambios');
-
       setIngresos(prev => prev.map(ing => ing.id === id ? { ...ing, ...formData, cantidad: parseFloat(formData.cantidad) } : ing));
       setEditandoId(null);
     } catch (error) {
@@ -81,19 +79,19 @@ const Ingresos = () => {
   };
 
   return (
-    <div className="clientes-wrapper">
+    <div className="ingresos-wrapper">
       <Sidebar />
-      <main className="clientes-content">
-        <h2 className="clientes-title">Lista de Ingresos</h2>
-        <section className="clientes-list-section">
+      <main className="ingresos-content">
+        <h2 className="ingresos-title">Lista de Ingresos</h2>
+        <section className="ingresos-list-section">
           {ingresos.length === 0 ? (
-            <p className="clientes-empty">No hay ingresos registrados.</p>
+            <p className="ingresos-empty">No hay ingresos registrados.</p>
           ) : (
-            <div className="clientes-list">
+            <div className="ingresos-list">
               {ingresos.map((ingreso) => (
-                <div key={ingreso.id} className="clientes-card">
+                <div key={ingreso.id} className="ingresos-card">
                   {editandoId === ingreso.id ? (
-                    <div className="clientes-info">
+                    <div className="ingresos-info">
                       <input type="text" name="titulo" value={formData.titulo} onChange={handleInputChange} placeholder="Título" />
                       <input type="text" name="descripcion" value={formData.descripcion} onChange={handleInputChange} placeholder="Descripción" />
                       <input type="number" name="cantidad" value={formData.cantidad} onChange={handleInputChange} placeholder="Cantidad" step="0.01" />
@@ -101,7 +99,7 @@ const Ingresos = () => {
                       <input type="text" name="categoria" value={formData.categoria} onChange={handleInputChange} placeholder="Categoría" />
                     </div>
                   ) : (
-                    <div className="clientes-info">
+                    <div className="ingresos-info">
                       <strong>{ingreso.titulo}</strong>
                       <p>Descripción: {ingreso.descripcion || '-'}</p>
                       <p>Cantidad: {formatCurrency(ingreso.cantidad)}</p>
@@ -109,16 +107,16 @@ const Ingresos = () => {
                       <p>Categoría: {ingreso.categoria || '-'}</p>
                     </div>
                   )}
-                  <div className="clientes-actions">
+                  <div className="ingresos-actions">
                     {editandoId === ingreso.id ? (
                       <>
-                        <button className="clientes-btn-editar" onClick={() => handleGuardar(ingreso.id)}>💾 Guardar</button>
-                        <button className="clientes-btn-eliminar" onClick={handleCancelar}>❌ Cancelar</button>
+                        <button className="ingresos-btn-editar" onClick={() => handleGuardar(ingreso.id)}>💾 Guardar</button>
+                        <button className="ingresos-btn-eliminar" onClick={handleCancelar}>❌ Cancelar</button>
                       </>
                     ) : (
                       <>
-                        <button className="clientes-btn-editar" onClick={() => handleEditar(ingreso)}>✏️ Editar</button>
-                        <button className="clientes-btn-eliminar" onClick={() => handleEliminar(ingreso.id)}>🗑️ Eliminar</button>
+                        <button className="ingresos-btn-editar" onClick={() => handleEditar(ingreso)}>✏️ Editar</button>
+                        <button className="ingresos-btn-eliminar" onClick={() => handleEliminar(ingreso.id)}>🗑️ Eliminar</button>
                       </>
                     )}
                   </div>
