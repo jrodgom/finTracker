@@ -8,6 +8,7 @@ import AñadirGastoPlazoPage from './pages/GastoPlazoPage';
 import ClientesPage from './pages/ClientesPage';
 import IngresosPage from './pages/IngresosPage'; // NUEVO
 import GastosPage from './pages/GastosPage';     // NUEVO
+import MovimientosPage from './pages/MovimientosPage'; // NUEVO - importamos el nuevo componente
 import PrivateRoute from './routes/PrivateRoute';
 
 function App() {
@@ -67,6 +68,14 @@ function App() {
           element={
             <PrivateRoute>
               <GastosPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/movimientos"
+          element={
+            <PrivateRoute>
+              <MovimientosPage />
             </PrivateRoute>
           }
         />
