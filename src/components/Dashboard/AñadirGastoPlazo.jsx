@@ -6,13 +6,18 @@ import '../../styles/añadirGastoPlazo.css';
 
 const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
   const [formulario, setFormulario] = useState({
-    nombre: '', valor: '', fechaInicio: '', fechaFin: '', cuotas: '', imagen: '',
+    nombre: '',
+    valor: '',
+    fechaInicio: '',
+    fechaFin: '',
+    cuotas: '',
+    imagen: '',
   });
+
   const [mensaje, setMensaje] = useState(null);
   const [tipoMensaje, setTipoMensaje] = useState('');
 
-  const manejarCambio = (e) => {
-    const { name, value } = e.target;
+  const manejarCambio = ({ target: { name, value } }) => {
     setFormulario((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -21,15 +26,15 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
     const { nombre, valor, fechaInicio, fechaFin, cuotas, imagen } = formulario;
     const clientEmail = localStorage.getItem('clientEmail');
 
-    if (!nombre || !valor || !fechaInicio || !cuotas || !fechaFin) {
-      setMensaje('Por favor, completa todos los campos obligatorios.');
+    if (!nombre || !valor || !fechaInicio || !fechaFin || !cuotas) {
       setTipoMensaje('error');
+      setMensaje('Por favor, completa todos los campos obligatorios.');
       return;
     }
 
     if (!clientEmail) {
-      setMensaje('No se encontró el correo del usuario. Intenta iniciar sesión nuevamente.');
       setTipoMensaje('error');
+      setMensaje('No se encontró el correo del usuario. Intenta iniciar sesión nuevamente.');
       return;
     }
 
@@ -37,25 +42,36 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
       titulo: nombre,
       cantidad: parseFloat(valor),
       fecha: fechaInicio,
+      fechaFin,
       totalCuotas: parseInt(cuotas, 10),
-      descripcion: "Compra a plazos",
-      fechaFin, imagen: imagen || null, clientEmail
+      descripcion: 'Compra a plazos',
+      imagen: imagen || null,
+      clientEmail,
     };
 
     try {
-      const response = await axios.post(
+      const { data } = await axios.post(
         'http://fintracker-rgjd.us-east-1.elasticbeanstalk.com:81/api/v1/installments',
-        nuevoGasto, { headers: { 'Content-Type': 'application/json' } }
+        nuevoGasto,
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
-      if (onGuardar) onGuardar(response.data);
-      setMensaje('¡Gasto guardado correctamente!');
       setTipoMensaje('exito');
-      setFormulario({ nombre: '', valor: '', fechaInicio: '', fechaFin: '', cuotas: '', imagen: '' });
+      setMensaje('¡Gasto guardado correctamente!');
+      setFormulario({
+        nombre: '',
+        valor: '',
+        fechaInicio: '',
+        fechaFin: '',
+        cuotas: '',
+        imagen: '',
+      });
+
+      if (onGuardar) onGuardar(data);
     } catch (error) {
       console.error('Error al guardar el gasto:', error.response || error);
-      setMensaje('Hubo un error al guardar el gasto.');
       setTipoMensaje('error');
+      setMensaje('Hubo un error al guardar el gasto.');
     }
   };
 
@@ -75,37 +91,79 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
 
           <div className="gastoPlazo-floating-group">
             <FiEdit className="input-icon" />
-            <input type="text" name="nombre" value={formulario.nombre} onChange={manejarCambio} placeholder="Ej: iPhone 13 Pro" required />
+            <input
+              type="text"
+              name="nombre"
+              value={formulario.nombre}
+              onChange={manejarCambio}
+              placeholder="Ej: iPhone 13 Pro"
+              required
+            />
             <label>Nombre del gasto *</label>
           </div>
 
           <div className="gastoPlazo-floating-group">
             <FiDollarSign className="input-icon" />
-            <input type="number" name="valor" value={formulario.valor} onChange={manejarCambio} min="0" step="0.01" placeholder="Ej: 999.99" required />
+            <input
+              type="number"
+              name="valor"
+              value={formulario.valor}
+              onChange={manejarCambio}
+              min="0"
+              step="0.01"
+              placeholder="Ej: 999.99"
+              required
+            />
             <label>Valor total (€) *</label>
           </div>
 
           <div className="gastoPlazo-floating-group">
             <FiCalendar className="input-icon" />
-            <input type="date" name="fechaInicio" value={formulario.fechaInicio} onChange={manejarCambio} required />
+            <input
+              type="date"
+              name="fechaInicio"
+              value={formulario.fechaInicio}
+              onChange={manejarCambio}
+              required
+            />
             <label>Fecha de inicio *</label>
           </div>
 
           <div className="gastoPlazo-floating-group">
             <FiCalendar className="input-icon" />
-            <input type="date" name="fechaFin" value={formulario.fechaFin} onChange={manejarCambio} required />
+            <input
+              type="date"
+              name="fechaFin"
+              value={formulario.fechaFin}
+              onChange={manejarCambio}
+              required
+            />
             <label>Fecha de finalización *</label>
           </div>
 
           <div className="gastoPlazo-floating-group">
             <FiList className="input-icon" />
-            <input type="number" name="cuotas" value={formulario.cuotas} onChange={manejarCambio} min="1" placeholder="Ej: 12" required />
+            <input
+              type="number"
+              name="cuotas"
+              value={formulario.cuotas}
+              onChange={manejarCambio}
+              min="1"
+              placeholder="Ej: 12"
+              required
+            />
             <label>Número de cuotas *</label>
           </div>
 
           <div className="gastoPlazo-floating-group">
             <FiImage className="input-icon" />
-            <input type="url" name="imagen" value={formulario.imagen} onChange={manejarCambio} placeholder="https://..." />
+            <input
+              type="url"
+              name="imagen"
+              value={formulario.imagen}
+              onChange={manejarCambio}
+              placeholder="https://..."
+            />
             <label>URL de imagen (opcional)</label>
           </div>
 
@@ -116,9 +174,9 @@ const AñadirGastoPlazo = ({ onCerrar, onGuardar }) => {
         </form>
 
         {mensaje && (
-          <div className={`toast-${tipoMensaje}`}>
+          <div className={`toast toast-${tipoMensaje}`}>
             <i className={`bi ${tipoMensaje === 'exito' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'} toast-icon`} />
-            {mensaje}
+            <span>{mensaje}</span>
           </div>
         )}
       </main>
