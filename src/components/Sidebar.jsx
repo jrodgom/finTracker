@@ -11,7 +11,7 @@ import '../styles/sidebar.css';
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const location = useLocation();  // <-- aquí obtienes la ruta actual
+  const location = useLocation();
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -19,7 +19,6 @@ const Sidebar = () => {
     navigate('/login');
   };
 
-  // Función que retorna "active" si la ruta actual es igual al path del botón
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
   return (
@@ -42,20 +41,19 @@ const Sidebar = () => {
           <span>Nuevo Movimiento</span>
         </button>
 
-        <button className={`nav-item ${isActive('/presupuestos')}`} onClick={() => navigate('/nuevo-gasto-plazo')}>
+        <button
+          className={`nav-item ${isActive('/presupuestos')}`}
+          onClick={() => navigate('/nuevo-gasto-plazo')}
+        >
           <FiTarget className="nav-icon" />
           <span>Gastos a Plazos</span>
         </button>
 
-        <button className={`nav-item ${isActive('/estadisticas')}`} onClick={() => navigate('/estadisticas')}>
-          <FiBarChart2 className="nav-icon" />
-          <span>Estadísticas</span>
-        </button>
-        
         <button
           className={`nav-item ${isActive('/clientes')}`}
-          onClick={() => navigate('/clientes')}>
-          <FiBarChart2 className="nav-icon" /> {/* Puedes usar otro icono si quieres */}
+          onClick={() => navigate('/clientes')}
+        >
+          <FiBarChart2 className="nav-icon" />
           <span>Clientes</span>
         </button>
 
