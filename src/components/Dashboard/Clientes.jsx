@@ -18,17 +18,12 @@ const Clientes = () => {
         console.error('Error cargando clientes:', error);
       }
     };
-
     fetchClientes();
   }, []);
 
   const handleEditar = (cliente) => {
     setEditandoId(cliente.id);
-    setFormData({
-      nombre: cliente.nombre,
-      apellidos: cliente.apellidos,
-      correo: cliente.correo
-    });
+    setFormData({ nombre: cliente.nombre, apellidos: cliente.apellidos, correo: cliente.correo });
   };
 
   const handleCancelar = () => {
@@ -48,14 +43,8 @@ const Clientes = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
       if (!response.ok) throw new Error('Error al guardar los cambios');
-
-      setClientes(prev =>
-        prev.map(cliente =>
-          cliente.id === id ? { ...cliente, ...formData } : cliente
-        )
-      );
+      setClientes(prev => prev.map(cliente => cliente.id === id ? { ...cliente, ...formData } : cliente));
       setEditandoId(null);
     } catch (error) {
       console.error('Error guardando cambios:', error);
@@ -63,13 +52,9 @@ const Clientes = () => {
   };
 
   const handleEliminar = async (id) => {
-    const confirmar = window.confirm('¿Estás seguro de que deseas eliminar este cliente?');
-    if (!confirmar) return;
-
+    if (!window.confirm('¿Estás seguro de que deseas eliminar este cliente?')) return;
     try {
-      const response = await fetch(`http://fintracker-rgjd.us-east-1.elasticbeanstalk.com/api/v1/clientes/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(`http://fintracker-rgjd.us-east-1.elasticbeanstalk.com/api/v1/clientes/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Error al eliminar el cliente');
       setClientes(prev => prev.filter(cliente => cliente.id !== id));
     } catch (error) {
@@ -82,7 +67,6 @@ const Clientes = () => {
       <Sidebar />
       <main className="clientes-content">
         <h2 className="clientes-title">Lista de Clientes</h2>
-
         <section className="clientes-list-section">
           {clientes.length === 0 ? (
             <p className="clientes-empty">No hay clientes registrados.</p>
@@ -92,56 +76,27 @@ const Clientes = () => {
                 <div key={cliente.id} className="clientes-card">
                   {editandoId === cliente.id ? (
                     <div className="clientes-info">
-                      <input
-                        type="text"
-                        name="nombre"
-                        value={formData.nombre}
-                        onChange={handleInputChange}
-                        placeholder="Nombre"
-                      />
-                      <input
-                        type="text"
-                        name="apellidos"
-                        value={formData.apellidos}
-                        onChange={handleInputChange}
-                        placeholder="Apellidos"
-                      />
-                      <input
-                        type="email"
-                        name="correo"
-                        value={formData.correo}
-                        onChange={handleInputChange}
-                        placeholder="Correo"
-                      />
+                      <input type="text" name="nombre" value={formData.nombre} onChange={handleInputChange} placeholder="Nombre" />
+                      <input type="text" name="apellidos" value={formData.apellidos} onChange={handleInputChange} placeholder="Apellidos" />
+                      <input type="email" name="correo" value={formData.correo} onChange={handleInputChange} placeholder="Correo" />
                     </div>
                   ) : (
                     <div className="clientes-info">
                       <strong>{cliente.nombre} {cliente.apellidos}</strong>
                       <p>📧 {cliente.correo}</p>
-                      {cliente.fechaCreacion && (
-                        <p>📅 Creado: {new Date(cliente.fechaCreacion).toLocaleDateString()}</p>
-                      )}
+                      {cliente.fechaCreacion && <p>📅 Creado: {new Date(cliente.fechaCreacion).toLocaleDateString()}</p>}
                     </div>
                   )}
-
                   <div className="clientes-actions">
                     {editandoId === cliente.id ? (
                       <>
-                        <button className="clientes-btn-editar" onClick={() => handleGuardar(cliente.id)}>
-                          💾 Guardar
-                        </button>
-                        <button className="clientes-btn-eliminar" onClick={handleCancelar}>
-                          ❌ Cancelar
-                        </button>
+                        <button className="clientes-btn-editar" onClick={() => handleGuardar(cliente.id)}>💾 Guardar</button>
+                        <button className="clientes-btn-eliminar" onClick={handleCancelar}>❌ Cancelar</button>
                       </>
                     ) : (
                       <>
-                        <button className="clientes-btn-editar" onClick={() => handleEditar(cliente)}>
-                          ✏️ Editar
-                        </button>
-                        <button className="clientes-btn-eliminar" onClick={() => handleEliminar(cliente.id)}>
-                          🗑️ Eliminar
-                        </button>
+                        <button className="clientes-btn-editar" onClick={() => handleEditar(cliente)}>✏️ Editar</button>
+                        <button className="clientes-btn-eliminar" onClick={() => handleEliminar(cliente.id)}>🗑️ Eliminar</button>
                       </>
                     )}
                   </div>
