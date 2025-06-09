@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../Sidebar';
-import '../../styles/clientes.css';
+import '../../styles/gastos.css';
 
 const formatDateEU = (d) => new Date(d).toLocaleDateString('es-ES');
 const formatCurrency = (v) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(v);
@@ -80,19 +80,19 @@ const Gastos = () => {
   };
 
   return (
-    <div className="clientes-wrapper">
+    <div className="gastos-wrapper">
       <Sidebar />
-      <main className="clientes-content">
-        <h2 className="clientes-title">Lista de Gastos</h2>
-        <section className="clientes-list-section">
+      <main className="gastos-content">
+        <h2 className="gastos-title">Lista de Gastos</h2>
+        <section className="gastos-list-section">
           {gastos.length === 0 ? (
-            <p className="clientes-empty">No hay gastos registrados.</p>
+            <p className="gastos-empty">No hay gastos registrados.</p>
           ) : (
-            <div className="clientes-list">
+            <div className="gastos-list">
               {gastos.map((gasto) => (
-                <div key={gasto.id} className="clientes-card">
+                <div key={gasto.id} className="gastos-card">
                   {editandoId === gasto.id ? (
-                    <div className="clientes-info">
+                    <div className="gastos-info">
                       <input type="text" name="titulo" value={formData.titulo} onChange={handleInputChange} placeholder="Título" />
                       <input type="text" name="descripcion" value={formData.descripcion} onChange={handleInputChange} placeholder="Descripción" />
                       <input type="number" name="cantidad" value={formData.cantidad} onChange={handleInputChange} placeholder="Cantidad" step="0.01" />
@@ -100,7 +100,7 @@ const Gastos = () => {
                       <input type="text" name="categoria" value={formData.categoria} onChange={handleInputChange} placeholder="Categoría" />
                     </div>
                   ) : (
-                    <div className="clientes-info">
+                    <div className="gastos-info">
                       <strong>{gasto.titulo}</strong>
                       <p>Descripción: {gasto.descripcion || '-'}</p>
                       <p>Cantidad: {formatCurrency(gasto.cantidad)}</p>
@@ -108,16 +108,16 @@ const Gastos = () => {
                       <p>Categoría: {gasto.categoria || '-'}</p>
                     </div>
                   )}
-                  <div className="clientes-actions">
+                  <div className="gastos-actions">
                     {editandoId === gasto.id ? (
                       <>
-                        <button className="clientes-btn-editar" onClick={() => handleGuardar(gasto.id)}>💾 Guardar</button>
-                        <button className="clientes-btn-eliminar" onClick={handleCancelar}>❌ Cancelar</button>
+                        <button className="gastos-btn-editar" onClick={() => handleGuardar(gasto.id)}>💾 Guardar</button>
+                        <button className="gastos-btn-eliminar" onClick={handleCancelar}>❌ Cancelar</button>
                       </>
                     ) : (
                       <>
-                        <button className="clientes-btn-editar" onClick={() => handleEditar(gasto)}>✏️ Editar</button>
-                        <button className="clientes-btn-eliminar" onClick={() => handleEliminar(gasto.id)}>🗑️ Eliminar</button>
+                        <button className="gastos-btn-editar" onClick={() => handleEditar(gasto)}>✏️ Editar</button>
+                        <button className="gastos-btn-eliminar" onClick={() => handleEliminar(gasto.id)}>🗑️ Eliminar</button>
                       </>
                     )}
                   </div>
