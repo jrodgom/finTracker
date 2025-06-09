@@ -88,8 +88,9 @@ const HomeDashboard = () => {
           <h5>Movimientos recientes</h5>
           {loading ? <p>Cargando movimientos...</p> :
             movimientos.length === 0 ? <p>No hay movimientos este mes.</p> :
-              movimientos.slice().sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, 3).map((m, i) => (
-                <div className="movement-card" key={i}>
+            movimientos.slice().sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, 3).map((m, i) => (
+              <Link to="/movimientos" key={i} className="movement-card-link">
+                <div className="movement-card">
                   <div>
                     <strong>{m.titulo || m.tipo}</strong><br />
                     <small>{m.tipo[0] + m.tipo.slice(1).toLowerCase()} • {formatDateEU(m.fecha)}</small>
@@ -100,7 +101,8 @@ const HomeDashboard = () => {
                     {m.tipo === 'GASTO' ? '- ' : '+ '}{formatCurrency(m.cantidad)}
                   </span>
                 </div>
-              ))}
+              </Link>
+            ))}            
         </div>
 
         <div className="dashboard-plazos fade-in">
