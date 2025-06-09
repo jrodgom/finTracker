@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../Sidebar';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Link } from 'react-router-dom';
 import '../../styles/home.css';
 
 const formatDateEU = (d) => new Date(d).toLocaleDateString('es-ES');
@@ -69,9 +70,18 @@ const HomeDashboard = () => {
         </div>
 
         <div className="dashboard-summary">
-          <div className="summary-card ingresos float-up"><h5>Ingresos</h5><p>{loading ? 'Cargando...' : formatCurrency(ingresos)}</p></div>
-          <div className="summary-card gastos float-up"><h5>Gastos</h5><p>{loading ? 'Cargando...' : formatCurrency(gastos)}</p></div>
-          <div className="summary-card saldo float-up"><h5>Saldo</h5><p>{loading ? 'Cargando...' : formatCurrency(saldo)}</p></div>
+          <Link to="/ingresos" className="summary-card ingresos float-up">
+            <h5>Ingresos</h5>
+            <p>{loading ? 'Cargando...' : formatCurrency(ingresos)}</p>
+          </Link>
+          <Link to="/gastos" className="summary-card gastos float-up">
+            <h5>Gastos</h5>
+            <p>{loading ? 'Cargando...' : formatCurrency(gastos)}</p>
+          </Link>
+          <div className="summary-card saldo float-up">
+            <h5>Saldo</h5>
+            <p>{loading ? 'Cargando...' : formatCurrency(saldo)}</p>
+          </div>
         </div>
 
         <div className="dashboard-movements fade-in">

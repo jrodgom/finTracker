@@ -302,3 +302,10 @@
 }
 
 
+.summary-card.ingresos,
+.summary-card.gastos {
+  cursor: pointer;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}

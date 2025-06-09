@@ -5,7 +5,9 @@ import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import NuevoMovimientoPage from './pages/NuevoMovimientoPage';
 import AñadirGastoPlazoPage from './pages/GastoPlazoPage';
-import ClientesPage from './pages/ClientesPage'; // NUEVO
+import ClientesPage from './pages/ClientesPage';
+import IngresosPage from './pages/IngresosPage'; // NUEVO
+import GastosPage from './pages/GastosPage';     // NUEVO
 import PrivateRoute from './routes/PrivateRoute';
 
 function App() {
@@ -49,6 +51,22 @@ function App() {
           element={
             <PrivateRoute>
               <ClientesPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/ingresos"
+          element={
+            <PrivateRoute>
+              <IngresosPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/gastos"
+          element={
+            <PrivateRoute>
+              <GastosPage />
             </PrivateRoute>
           }
         />
